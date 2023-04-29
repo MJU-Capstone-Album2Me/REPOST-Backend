@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.0.6'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'org.asciidoctor.jvm.convert' version '4.0.0-alpha.1'
+	id 'jacoco'
 }
 
 group = 'com.album2me'
@@ -39,6 +40,22 @@ dependencies {
 tasks.named('test') {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = '0.8.8'
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		xml.enabled true
+		csv.enabled false
+	}
 }
 
 tasks.named('asciidoctor') {
