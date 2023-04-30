@@ -1,9 +1,10 @@
-package com.album2me.repost.domain.user.dto;
+package com.album2me.repost.domain.user.dto.request;
 
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.global.util.RegexUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record UserCreateRequest(
         @NotBlank(message = "아이디는 필수입니다.")
@@ -17,10 +18,10 @@ public record UserCreateRequest(
         String nickname
 ){
 
-        public User toEntity() {
+        public User toEntity(PasswordEncoder passwordEncoder) {
                 return User.builder()
                         .authId(authId)
-                        .password(password)
+                        .password(passwordEncoder.encode(password))
                         .nickName(nickname)
                         .build();
         }
