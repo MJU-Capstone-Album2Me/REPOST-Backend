@@ -4,10 +4,28 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/repostdb?serverTimezone=Asia/Seoul
     username: album2me
-    password: ${DB_PASSWORD}
+    password: ENC(NafMrdQSRzbJN+YK3qWHWQ==)
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         show_sql: true
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${JASYPT_PASSWORD}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(8B4jjzbIeDQaVS8CMhrMXCA/z3P/1/SsAWOx3CSx4jk=)
+      secret-key: ENC(FR8m+0neWo11YVjxtQl8qDzDb/OvUUHwqy1evCgNeVpMA5HVvqLWf7vzQnQ6FjO/d/mDVNFYmRg=)
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    s3:
+      bucket: repost-bucket
