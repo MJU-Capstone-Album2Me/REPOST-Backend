@@ -1,6 +1,6 @@
 package com.album2me.repost.testutils;
 
-import com.album2me.repost.domain.user.dto.UserCreateRequest;
+import com.album2me.repost.domain.user.dto.request.UserCreateRequest;
 import com.album2me.repost.domain.user.model.User;
 
 public class UserObjectProvider {

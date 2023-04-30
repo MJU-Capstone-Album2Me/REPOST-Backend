@@ -20,7 +20,7 @@ public class User extends BaseTimeColumn {
     @Column(length = 30, unique = true, nullable = false)
     private String authId;
 
-    @Column(length = 30, unique = true, nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Column(length = 20, unique = true, nullable = false)
