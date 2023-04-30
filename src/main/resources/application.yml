@@ -4,10 +4,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/repostdb?serverTimezone=Asia/Seoul
     username: album2me
-    password: ${DB_PASSWORD}
+    password: ENC(NafMrdQSRzbJN+YK3qWHWQ==)
+
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         show_sql: true
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${JASYPT_PASSWORD}
