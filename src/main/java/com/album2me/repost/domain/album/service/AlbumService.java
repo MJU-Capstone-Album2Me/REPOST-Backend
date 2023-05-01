@@ -1,5 +1,6 @@
 package com.album2me.repost.domain.album.service;
 
+import com.album2me.repost.domain.album.dto.request.AlbumRequest;
 import com.album2me.repost.domain.album.dto.response.AlbumResponse;
 import com.album2me.repost.domain.album.model.Album;
 import com.album2me.repost.domain.album.repository.AlbumRepository;
@@ -7,6 +8,7 @@ import com.album2me.repost.domain.album.repository.AlbumRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,5 +25,12 @@ public class AlbumService {
         return albums.stream()
                 .map(AlbumResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public AlbumResponse create(final AlbumRequest albumRequest) {
+        final Album newAlbum = albumRepository.save(albumRequest.toEntity());
+
+        return AlbumResponse.from(newAlbum);
     }
 }
