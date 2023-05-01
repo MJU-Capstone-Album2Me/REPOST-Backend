@@ -30,7 +30,7 @@ public class User extends BaseTimeColumn {
     private String role;
 
     @Builder
-    protected User(String authId, String password, String nickName) {
+    protected User(final String authId, final String password, final String nickName) {
         this.authId = authId;
         this.password = password;
         this.nickName = nickName;

@@ -13,7 +13,6 @@ public class UserService {
     public void signUp(User user){
         userRepository.save(user);
     }
-    @Transactional
     public User findUserByAuthId(String authId){
         User user = userRepository.findByAuthId(authId)
                 .orElseThrow(() -> new IllegalArgumentException(""));

@@ -37,7 +37,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private void checkValidPassword(User user, String credential){
         if(!passwordEncoder.matches(credential, user.getPassword())){
-            throw new IllegalArgumentException("BadCredential");
+            throw new IllegalArgumentException("Bad Credential");
         }
     }
 
