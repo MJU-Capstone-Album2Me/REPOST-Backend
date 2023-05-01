@@ -33,4 +33,14 @@ public class AlbumService {
 
         return AlbumResponse.from(newAlbum);
     }
+
+    @Transactional
+    public AlbumResponse update(final Long id, final AlbumRequest albumRequest) {
+        final Album album = albumRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+        album.update(albumRequest.toEntity());
+
+        return AlbumResponse.from(album);
+    }
 }

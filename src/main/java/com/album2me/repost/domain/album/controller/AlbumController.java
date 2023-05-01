@@ -31,4 +31,15 @@ public class AlbumController {
         return ResponseEntity.created(URI.create("api/albums" + albumId))
                 .build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable final Long id,
+            @RequestBody final AlbumRequest albumRequest
+    ) {
+        albumService.update(id, albumRequest);
+
+        return ResponseEntity.noContent()
+                .build();
+    }
 }
