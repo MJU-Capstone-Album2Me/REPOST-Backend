@@ -29,3 +29,10 @@ cloud:
       auto: false
     s3:
       bucket: repost-bucket
+
+jwt:
+  token:
+    header: Authorization
+    issuer: album2me
+    client-secret: ENC(UvtsKp8Ul3wLjWNtyKOf3w==)
+    expirySeconds: 7200
