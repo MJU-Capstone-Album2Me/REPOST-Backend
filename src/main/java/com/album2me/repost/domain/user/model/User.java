@@ -8,9 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeColumn {
     @Id
@@ -25,11 +27,13 @@ public class User extends BaseTimeColumn {
 
     @Column(length = 20, unique = true, nullable = false)
     private String nickName;
+    private String role;
 
     @Builder
-    protected User(String authId, String password, String nickName) {
+    protected User(final String authId, final String password, final String nickName) {
         this.authId = authId;
         this.password = password;
         this.nickName = nickName;
+        this.role = "ROLE_USER";
     }
 }
