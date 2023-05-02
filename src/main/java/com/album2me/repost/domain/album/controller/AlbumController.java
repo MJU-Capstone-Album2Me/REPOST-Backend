@@ -42,4 +42,12 @@ public class AlbumController {
         return ResponseEntity.noContent()
                 .build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+        albumService.delete(id);
+
+        return ResponseEntity.noContent()
+                .build();
+    }
 }
