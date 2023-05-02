@@ -33,4 +33,20 @@ public class AlbumService {
 
         return AlbumResponse.from(newAlbum);
     }
+
+    @Transactional
+    public void update(final Long id, final AlbumRequest albumRequest) {
+        final Album album = albumRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+        album.update(albumRequest.toEntity());
+    }
+
+    @Transactional
+    public void delete(final Long id) {
+        final Album album = albumRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+        albumRepository.delete(album);
+    }
 }

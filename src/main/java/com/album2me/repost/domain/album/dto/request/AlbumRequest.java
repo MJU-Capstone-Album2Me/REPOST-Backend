@@ -8,20 +8,14 @@ import lombok.*;
 @AllArgsConstructor
 public class AlbumRequest {
 
-    private Long roomId;
-    private Long writerId;
-    private String thumbnailUrl;
     private String name;
-    private Long postCount;
+    private String thumbnailUrl;
 
     @Builder
     public Album toEntity() {
         return Album.builder()
-                .roomId(roomId)
-                .writerId(writerId)
-                .thumbnailUrl(thumbnailUrl)
                 .name(name)
-                .postCount(postCount)
+                .thumbnailUrl(thumbnailUrl)
                 .build();
     }
 }

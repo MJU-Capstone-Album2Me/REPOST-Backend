@@ -48,4 +48,21 @@ public class Album extends BaseTimeColumn {
         this.thumbnailUrl = thumbnailUrl;
         this.postCount = postCount;
     }
+
+    public void update(final Album album) {
+        updateName(album.getName());
+        updateThumbnail(album.getThumbnailUrl());
+    }
+
+    private void updateName(final String name) {
+        if (name != null) {
+            this.name = name;
+        }
+    }
+
+    private void updateThumbnail(final String thumbnailUrl) {
+        if (thumbnailUrl != null) {
+            this.thumbnailUrl = thumbnailUrl;
+        }
+    }
 }
