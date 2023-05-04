@@ -20,7 +20,7 @@ jasypt:
 cloud:
   aws:
     credentials:
-      access-key: ENC(8B4jjzbIeDQaVS8CMhrMXCA/z3P/1/SsAWOx3CSx4jk=)
+      access-key: ENC(VY834y5nhBS8+gvjF0nWF9Bs/wV4AVcsSVqSj9iDvxI=)
       secret-key: ENC(FR8m+0neWo11YVjxtQl8qDzDb/OvUUHwqy1evCgNeVpMA5HVvqLWf7vzQnQ6FjO/d/mDVNFYmRg=)
     region:
       static: ap-northeast-2
