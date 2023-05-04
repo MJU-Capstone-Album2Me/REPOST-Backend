@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,7 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.debug("Bad request exception occurred: {}", e.getMessage(), e);
         List<FieldException> details = createFieldExceptionList(e.getBindingResult());
         return ErrorResponse.badRequest(ErrorCode.INVALID_ARGUMENT, details);
