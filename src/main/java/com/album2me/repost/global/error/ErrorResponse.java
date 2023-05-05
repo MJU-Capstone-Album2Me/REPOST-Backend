@@ -1,7 +1,6 @@
 package com.album2me.repost.global.error;
 
 import java.util.List;
-import org.springframework.http.HttpStatus;
 
 public record ErrorResponse(
         int status,
