@@ -1,4 +1,4 @@
-package com.album2me.repost.domain.post.domain;
+package com.album2me.repost.domain.post.model;
 
 import jakarta.persistence.*;
 

@@ -1,6 +1,6 @@
 package com.album2me.repost.domain.post.repository;
 
-import com.album2me.repost.domain.post.domain.Post;
+import com.album2me.repost.domain.post.model.Post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

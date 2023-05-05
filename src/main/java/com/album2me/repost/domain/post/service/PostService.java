@@ -1,6 +1,6 @@
 package com.album2me.repost.domain.post.service;
 
-import com.album2me.repost.domain.post.domain.Post;
+import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.dto.response.PostResponse;
 import com.album2me.repost.domain.post.repository.PostRepository;
 

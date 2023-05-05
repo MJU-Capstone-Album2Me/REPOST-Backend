@@ -1,6 +1,6 @@
 package com.album2me.repost.domain.post.dto.response;
 
-import com.album2me.repost.domain.post.domain.Post;
+import com.album2me.repost.domain.post.model.Post;
 
 import lombok.AccessLevel;
 import lombok.Getter;
