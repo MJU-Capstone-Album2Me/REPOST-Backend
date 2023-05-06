@@ -1,11 +1,10 @@
 package com.album2me.repost.global.config.security.jwt;
 
-import com.album2me.repost.domain.user.model.User;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class JwtAuthentication {
-    private final User user;
+    private final Long id;
+    private final String authId;
 
-    public JwtAuthentication(User user) {
-        this.user = user;
-    }
 }
