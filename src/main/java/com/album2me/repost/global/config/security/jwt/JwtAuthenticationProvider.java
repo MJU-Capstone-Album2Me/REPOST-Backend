@@ -9,7 +9,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final UserService userService;
@@ -29,8 +31,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private Authentication processUserAuthentication(String principal, String credential) {
         User user = userService.findUserByAuthId(principal);
         checkValidPassword(user, credential);
-        String token = jwtProvider.createAccessToken(user.getAuthId(), user.getRole());
-        JwtAuthenticationToken authenticated = new JwtAuthenticationToken(new JwtAuthentication(user), null, createAuthorityList(user.getRole()));
+        String token = jwtProvider.createAccessToken(user);
+        JwtAuthenticationToken authenticated = new JwtAuthenticationToken(new JwtAuthentication(user.getId(), user.getAuthId()), null, createAuthorityList(user.getRole().name()));
         authenticated.setDetails(token);
         return authenticated;
     }
