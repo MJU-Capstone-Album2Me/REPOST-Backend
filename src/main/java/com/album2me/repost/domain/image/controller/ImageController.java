@@ -20,7 +20,6 @@ public class ImageController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public UploadImageResponse uploadImage(@ModelAttribute @Valid UploadImageRequest uploadImageRequest) {
-        UploadImageResponse uploadImageResponse = imageService.uploadImage(uploadImageRequest);
-        return uploadImageResponse;
+        return imageService.uploadImage(uploadImageRequest);
     }
 }

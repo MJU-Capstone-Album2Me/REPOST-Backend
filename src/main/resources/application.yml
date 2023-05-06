@@ -7,7 +7,7 @@ spring:
     password: ENC(NafMrdQSRzbJN+YK3qWHWQ==)
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
@@ -39,4 +39,4 @@ jwt:
     header: Authorization
     issuer: album2me
     client-secret: ENC(UvtsKp8Ul3wLjWNtyKOf3w==)
-    expirySeconds: 7200
+    expirySeconds: 72000
