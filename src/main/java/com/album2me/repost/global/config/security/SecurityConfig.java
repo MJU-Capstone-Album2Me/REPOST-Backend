@@ -1,9 +1,6 @@
 package com.album2me.repost.global.config.security;
 
-import com.album2me.repost.domain.user.service.UserService;
-import com.album2me.repost.global.config.security.jwt.JwtAuthenticationProvider;
 import com.album2me.repost.global.config.security.jwt.JwtAuthenticationTokenFilter;
-import com.album2me.repost.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
