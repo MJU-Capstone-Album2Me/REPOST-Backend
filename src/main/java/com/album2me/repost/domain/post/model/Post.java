@@ -34,11 +34,11 @@ public class Post extends BaseTimeColumn {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 100)
-    private String title;
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
+
+    @Column(nullable = false, length = 100)
+    private String title;
 
     @Column(length = 200)
     private String contents;
