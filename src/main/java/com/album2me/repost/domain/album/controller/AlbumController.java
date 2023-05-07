@@ -1,9 +1,13 @@
 package com.album2me.repost.domain.album.controller;
 
-import com.album2me.repost.domain.album.dto.request.AlbumRequest;
+import com.album2me.repost.domain.album.dto.request.AlbumCreateRequest;
+import com.album2me.repost.domain.album.dto.request.AlbumUpdateRequest;
 import com.album2me.repost.domain.album.dto.response.AlbumResponse;
 import com.album2me.repost.domain.album.service.AlbumService;
+import com.album2me.repost.domain.auth.controller.VerifiedUser;
+import com.album2me.repost.domain.user.model.User;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -25,8 +29,11 @@ public class AlbumController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody final AlbumRequest albumRequest) {
-        final Long albumId = albumService.create(albumRequest).getId();
+    public ResponseEntity<Void> create(
+            @VerifiedUser User user,
+            @Valid @RequestBody final AlbumCreateRequest albumCreateRequest
+    ) {
+        final Long albumId = albumService.create(user.getId(), albumCreateRequest);
 
         return ResponseEntity.created(URI.create("api/albums" + albumId))
                 .build();
@@ -35,19 +42,24 @@ public class AlbumController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable final Long id,
-            @RequestBody final AlbumRequest albumRequest
+            @VerifiedUser User user,
+            @Valid @RequestBody final AlbumUpdateRequest albumUpdateRequest
     ) {
-        albumService.update(id, albumRequest);
+        albumService.update(id, albumUpdateRequest);
 
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.ok()
+            .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(
+            @PathVariable final Long id,
+            @VerifiedUser User user
+    ) {
+
         albumService.delete(id);
 
-        return ResponseEntity.noContent()
+        return ResponseEntity.ok()
                 .build();
     }
 }
