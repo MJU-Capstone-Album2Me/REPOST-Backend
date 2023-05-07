@@ -1,5 +1,7 @@
 package com.album2me.repost.domain.album.model;
 
+import com.album2me.repost.domain.room.model.Room;
+import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.global.common.BaseTimeColumn;
 import jakarta.persistence.*;
 
@@ -15,13 +17,16 @@ public class Album extends BaseTimeColumn {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "album_id")
     private Long id;
 
-    @Column(length = 20, unique = true, nullable = false)
-    private Long roomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
-    @Column(length = 20, unique = true, nullable = false)
-    private Long writerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(length = 30, unique = true, nullable = false)
     private String name;
@@ -29,21 +34,21 @@ public class Album extends BaseTimeColumn {
     @Column(length = 50)
     private String thumbnailUrl;
 
-    @Column(length = 20)
-    private Long postCount;
+    @Column(length = 20, nullable = false)
+    private int postCount;
 
     @Builder
     public Album(
             final Long id,
-            final Long roomId,
-            final Long writerId,
+            final Room room,
+            final User user,
             final String name,
             final String thumbnailUrl,
-            final Long postCount
+            final int postCount
     ) {
         this.id = id;
-        this.roomId = roomId;
-        this.writerId = writerId;
+        this.room = room;
+        this.user = user;
         this.name = name;
         this.thumbnailUrl = thumbnailUrl;
         this.postCount = postCount;
