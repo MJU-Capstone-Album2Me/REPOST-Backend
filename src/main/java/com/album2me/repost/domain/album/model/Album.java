@@ -1,5 +1,6 @@
 package com.album2me.repost.domain.album.model;
 
+import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.global.common.BaseTimeColumn;
@@ -9,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +31,9 @@ public class Album extends BaseTimeColumn {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.REMOVE)
+    private List<Post> posts = new ArrayList<>();
 
     @Column(length = 30, unique = true, nullable = false)
     private String name;
