@@ -7,9 +7,7 @@ public enum ErrorCode {
 
     //Common
     INVALID_ARGUMENT(400, 1000, "유효하지 않은 입력."),
-
-    //Album
-    NOT_FOUND_ALBUM(404, 2000, "앨범을 찾을 수 없습니다.");
+    NOT_FOUND(404, 2000, "요청한 리소스를 찾을 수 없음.");
 
     private final int status;
     private final int code;
