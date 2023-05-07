@@ -2,6 +2,7 @@ package com.album2me.repost.global.error;
 
 import com.album2me.repost.global.error.ErrorResponse.FieldException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
         log.debug("Bad request exception occurred: {}", e.getMessage(), e);
         List<FieldException> details = createFieldExceptionList(e.getBindingResult());
         return ErrorResponse.badRequest(ErrorCode.INVALID_ARGUMENT, details);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNoSuchElementException(NoSuchElementException e) {
+        log.debug("Not Found exception occurred: {}", e.getMessage(), e);
+        return ErrorResponse.notFound(ErrorCode.NOT_FOUND);
     }
 
     private List<FieldException> createFieldExceptionList(BindingResult bindingResult) {

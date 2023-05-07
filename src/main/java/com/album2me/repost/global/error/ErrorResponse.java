@@ -21,4 +21,8 @@ public record ErrorResponse(
     public static ErrorResponse badRequest(ErrorCode errorCode, List<FieldException> details){
         return new ErrorResponse(errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage(), details);
     }
+
+    public static ErrorResponse notFound(ErrorCode errorCode) {
+        return new ErrorResponse(errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage(), null);
+    }
 }
