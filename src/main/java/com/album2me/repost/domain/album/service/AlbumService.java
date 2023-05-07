@@ -11,7 +11,6 @@ import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,17 +52,15 @@ public class AlbumService {
     }
 
     @Transactional
-    public void update(final Long id, final AlbumRequest albumRequest) {
-        final Album album = albumRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+    public void update(final Long id, final AlbumUpdateRequest albumUpdateRequest) {
+        final Album album = findAlbumById(id);
 
-        album.update(albumRequest.toEntity());
+        album.update(albumUpdateRequest.toEntity());
     }
 
     @Transactional
     public void delete(final Long id) {
-        final Album album = albumRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+        final Album album = findAlbumById(id);
 
         albumRepository.delete(album);
     }
