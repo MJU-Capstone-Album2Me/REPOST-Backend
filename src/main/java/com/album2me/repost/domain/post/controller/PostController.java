@@ -2,6 +2,7 @@ package com.album2me.repost.domain.post.controller;
 
 import com.album2me.repost.domain.auth.controller.VerifiedUser;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
+import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.dto.response.PostResponse;
 import com.album2me.repost.domain.post.service.PostService;
 
@@ -31,15 +32,26 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @VerifiedUser User user,
-            @Valid @RequestBody PostCreateRequest postCreateRequest
+            @PathVariable final Long albumId,
+            @VerifiedUser final User user,
+            @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
-        final Long postId = postService.create(user.getId(), postCreateRequest);
+        final Long postId = postService.create(albumId, user.getId(), postCreateRequest);
 
         return ResponseEntity.created(
                 URI.create("/api/albums/{albumId}/posts" + postId)
         ).build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable final Long id,
+            @VerifiedUser final User user,
+            @Valid @RequestBody final PostUpdateRequest postUpdateRequest
+    ) {
+        postService.update(id, user, postUpdateRequest);
 
+        return ResponseEntity.ok()
+                .build();
+    }
 }
