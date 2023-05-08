@@ -30,7 +30,7 @@ public class AlbumController {
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @VerifiedUser User user,
+            @VerifiedUser final User user,
             @Valid @RequestBody final AlbumCreateRequest albumCreateRequest
     ) {
         final Long albumId = albumService.create(user.getId(), albumCreateRequest);
@@ -42,7 +42,7 @@ public class AlbumController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable final Long id,
-            @VerifiedUser User user,
+            @VerifiedUser final User user,
             @Valid @RequestBody final AlbumUpdateRequest albumUpdateRequest
     ) {
         albumService.update(id, albumUpdateRequest);
