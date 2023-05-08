@@ -6,9 +6,9 @@ import com.album2me.repost.domain.album.dto.response.AlbumResponse;
 import com.album2me.repost.domain.album.model.Album;
 import com.album2me.repost.domain.album.repository.AlbumRepository;
 import com.album2me.repost.domain.room.model.Room;
-import com.album2me.repost.domain.room.repository.RoomRepository;
+import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.domain.user.model.User;
-import com.album2me.repost.domain.user.repository.UserRepository;
+import com.album2me.repost.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlbumService {
 
+    private final RoomService roomService;
+    private final UserService userService;
     private final AlbumRepository albumRepository;
-    private final UserRepository userRepository;
-    private final RoomRepository roomRepository;
 
     public List<AlbumResponse> showAll() {
         final List<Album> albums = albumRepository.findAll();
@@ -36,8 +36,8 @@ public class AlbumService {
 
     @Transactional
     public Long create(final Long userId, final AlbumCreateRequest albumCreateRequest) {
-        final User user = findUserById(userId);
-        final Room room = findRoomById(albumCreateRequest.getRoomId());
+        final User user = userService.findUserById(userId);
+        final Room room = roomService.findRoomById(albumCreateRequest.getRoomId());
 
         final Long albumId = createAlbum(user, room, albumCreateRequest);
 
@@ -65,17 +65,7 @@ public class AlbumService {
         albumRepository.delete(album);
     }
 
-    private User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("해당 id로 User를 찾을 수 없습니다."));
-    }
-
-    private Room findRoomById(Long roomId) {
-        return roomRepository.findById(roomId)
-                .orElseThrow(() -> new NoSuchElementException("해당 id로 Room을 찾을 수 없습니다."));
-    }
-
-    private Album findAlbumById(Long albumId) {
+    public Album findAlbumById(Long albumId) {
         return albumRepository.findById(albumId)
                 .orElseThrow(() -> new NoSuchElementException("해당 id로 Album을 찾을 수 없습니다."));
     }
