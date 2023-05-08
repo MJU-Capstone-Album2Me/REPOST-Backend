@@ -37,7 +37,7 @@ public class AlbumService {
     @Transactional
     public Long create(final Long userId, final AlbumCreateRequest albumCreateRequest) {
         final User user = userService.findUserById(userId);
-        final Room room = roomService.findRoomById(albumCreateRequest.getRoomId());
+        final Room room = roomService.findRoomById(albumCreateRequest.roomId());
 
         final Long albumId = createAlbum(user, room, albumCreateRequest);
 
