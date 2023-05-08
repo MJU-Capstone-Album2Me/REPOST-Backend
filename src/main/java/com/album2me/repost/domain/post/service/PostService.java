@@ -1,14 +1,15 @@
 package com.album2me.repost.domain.post.service;
 
 import com.album2me.repost.domain.album.model.Album;
-import com.album2me.repost.domain.album.repository.AlbumRepository;
+import com.album2me.repost.domain.album.service.AlbumService;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
+import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.dto.response.PostResponse;
 import com.album2me.repost.domain.post.repository.PostRepository;
 import com.album2me.repost.domain.user.model.User;
-import com.album2me.repost.domain.user.repository.UserRepository;
 
+import com.album2me.repost.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -20,9 +21,9 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class PostService {
 
+    private final UserService userService;
+    private final AlbumService albumService;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final AlbumRepository albumRepository;
 
     public PostResponse findById(final Long id) {
 
@@ -33,9 +34,9 @@ public class PostService {
     }
 
     @Transactional
-    public Long create(final Long userId, final PostCreateRequest postCreateRequest) {
-        final User user = findUserById(userId);
-        final Album album = findAlbumById(postCreateRequest.getAlbumId());
+    public Long create(final Long albumId, final Long userId, final PostCreateRequest postCreateRequest) {
+        final User user = userService.findUserById(userId);
+        final Album album = albumService.findAlbumById(albumId);
 
         final Long postId = createPost(user, album, postCreateRequest);
 
@@ -49,14 +50,19 @@ public class PostService {
                 .getId();
     }
 
-    private User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("해당 id로 User를 찾을 수 없습니다."));
+    @Transactional
+    public void update(final Long id, final User user, final PostUpdateRequest postUpdateRequest) {
+        final Post post = findPostById(id);
+
+        validateWriter(post, user);
+
+        post.update(postUpdateRequest.toEntity());
     }
 
-    private Album findAlbumById(Long albumId) {
-        return albumRepository.findById(albumId)
-                .orElseThrow(() -> new NoSuchElementException("해당 id로 Album을 찾을 수 없습니다."));
+    private void validateWriter(final Post post, final User user) {
+        if (!post.isWrittenBy(user)) {
+                throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
+        }
     }
 
     private Post findPostById(Long postId) {

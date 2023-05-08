@@ -7,15 +7,13 @@ import com.album2me.repost.global.common.BaseTimeColumn;
 
 import jakarta.persistence.*;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -68,6 +66,44 @@ public class Post extends BaseTimeColumn {
         this.commentCount = commentCount;
         this.isFavorite = isFavorite;
    }
+
+    public void update(final Post post) {
+        updateTitle(post.getTitle());
+        updateContents(post.getContents());
+    }
+
+    private void updateTitle(final String title) {
+        if (title != null) {
+            this.title = title;
+        }
+    }
+
+    private void updateContents(final String contents) {
+        if (contents != null) {
+            this.contents = contents;
+        }
+    }
+
+    public boolean isWrittenBy(final User user) {
+        return this.user.equals(user);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Post)) {
+            return false;
+        }
+        final Post post = (Post) o;
+        return Objects.equals(id, post.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
 
 
