@@ -6,19 +6,11 @@ import com.album2me.repost.domain.user.model.User;
 
 import jakarta.validation.constraints.NotNull;
 
-import lombok.*;
+public record AlbumCreateRequest (
+    @NotNull(message = "방이 없습니다.") Long roomId,
+    @NotNull(message = "이름이 없습니다.") String name
+) {
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-public class AlbumCreateRequest {
-
-    @NotNull(message = "방이 없습니다.")
-    private Long roomId;
-    @NotNull(message = "이름이 없습니다.")
-    private String name;
-
-    @Builder
     public Album toEntity(final User user, final Room room) {
         return Album.builder()
                 .user(user)
