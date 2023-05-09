@@ -56,7 +56,6 @@ public class AlbumController {
             @PathVariable final Long id,
             @VerifiedUser User user
     ) {
-
         albumService.delete(id);
 
         return ResponseEntity.ok()
