@@ -59,6 +59,15 @@ public class PostService {
         post.update(postUpdateRequest.toEntity());
     }
 
+    @Transactional
+    public void delete(final Long id, final User user) {
+        final Post post = findPostById(id);
+
+        validateWriter(post, user);
+
+        postRepository.delete(post);
+    }
+
     private void validateWriter(final Post post, final User user) {
         if (!post.isWrittenBy(user)) {
                 throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
@@ -68,5 +77,6 @@ public class PostService {
     private Post findPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("해당 id로 Post을 찾을 수 없습니다."));
+
     }
 }
