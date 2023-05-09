@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,14 @@ public class PostService {
         return PostResponse.from(post);
     }
 
+    public List<PostResponse> showAll() {
+        final List<Post> posts = postRepository.findAll();
+
+        return posts.stream()
+                .map(PostResponse::from)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public Long create(final Long albumId, final Long userId, final PostCreateRequest postCreateRequest) {
         final User user = userService.findUserById(userId);
@@ -43,7 +53,7 @@ public class PostService {
         return postId;
     }
 
-    private Long createPost(final User user, final Album album, final PostCreateRequest postCreateRequest) {
+    public Long createPost(final User user, final Album album, final PostCreateRequest postCreateRequest) {
         final Post post = postCreateRequest.toEntity(user, album);
 
         return postRepository.save(post)
