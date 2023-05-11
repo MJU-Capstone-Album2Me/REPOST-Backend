@@ -2,14 +2,13 @@ package com.album2me.repost.domain.comment.service;
 
 import com.album2me.repost.domain.comment.domain.Comment;
 import com.album2me.repost.domain.comment.dto.request.CommentCreateRequest;
-
 import com.album2me.repost.domain.comment.repository.CommentRepository;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.service.PostService;
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.domain.user.service.UserService;
-import lombok.RequiredArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
