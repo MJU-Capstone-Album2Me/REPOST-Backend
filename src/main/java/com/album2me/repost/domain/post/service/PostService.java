@@ -84,7 +84,7 @@ public class PostService {
         }
     }
 
-    private Post findPostById(Long postId) {
+    public Post findPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("해당 id로 Post을 찾을 수 없습니다."));
 
