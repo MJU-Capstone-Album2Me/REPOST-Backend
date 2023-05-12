@@ -1,14 +1,14 @@
 package com.album2me.repost.domain.comment.controller;
 
 import com.album2me.repost.domain.auth.controller.VerifiedUser;
-import com.album2me.repost.domain.comment.domain.Comment;
 import com.album2me.repost.domain.comment.dto.request.CommentCreateRequest;
 import com.album2me.repost.domain.comment.dto.request.CommentUpdateRequest;
 import com.album2me.repost.domain.comment.service.CommentService;
 import com.album2me.repost.domain.user.model.User;
-import com.amazonaws.Response;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +37,11 @@ public class CommentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
-            @PathVariable final Long commentId,
+            @PathVariable final Long id,
             @VerifiedUser final User user,
             @Valid @RequestBody final CommentUpdateRequest commentUpdateRequest
     ) {
-        commentService.update(commentId, user.getId(), commentUpdateRequest);
+        commentService.update(id, user.getId(), commentUpdateRequest);
 
         return ResponseEntity.ok()
                 .build();
