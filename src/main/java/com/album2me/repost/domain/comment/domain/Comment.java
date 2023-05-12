@@ -3,6 +3,7 @@ package com.album2me.repost.domain.comment.domain;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.user.model.User;
 
+import com.album2me.repost.global.common.BaseTimeColumn;
 import jakarta.persistence.*;
 
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTimeColumn {
 
     @Id
     @GeneratedValue
