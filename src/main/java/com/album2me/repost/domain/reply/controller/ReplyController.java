@@ -2,6 +2,7 @@ package com.album2me.repost.domain.reply.controller;
 
 import com.album2me.repost.domain.auth.controller.VerifiedUser;
 import com.album2me.repost.domain.reply.dto.request.ReplyCreateRequest;
+import com.album2me.repost.domain.reply.dto.request.ReplyUpdateRequest;
 import com.album2me.repost.domain.reply.service.ReplyService;
 import com.album2me.repost.domain.user.model.User;
 import jakarta.validation.Valid;
@@ -29,5 +30,17 @@ public class ReplyController {
         return ResponseEntity.created(
                 URI.create("api/albums/{albumId}/posts/{postId}/comments/{commentId}/replies" + replyId)
         ).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable final Long id,
+            @VerifiedUser final User user,
+            @Valid @RequestBody final ReplyUpdateRequest replyUpdateRequest
+    ) {
+        replyService.update(id, user.getId(), replyUpdateRequest);
+
+        return ResponseEntity.ok()
+                .build();
     }
 }

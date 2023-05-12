@@ -46,6 +46,16 @@ public class Reply extends BaseTimeColumn {
         this.contents = contents;
     }
 
+    public void update(final Reply reply) {
+        updateContents(reply.getContents());
+    }
+
+    private void updateContents(final String contents) {
+        if (contents != null) {
+            this.contents = contents;
+        }
+    }
+
     public boolean isWrittenBy(final User user) {
         return this.user.equals(user);
     }
