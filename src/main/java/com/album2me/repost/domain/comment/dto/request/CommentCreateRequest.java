@@ -18,5 +18,4 @@ public record CommentCreateRequest (
                 .contents(contents)
                 .build();
     }
-
 }
