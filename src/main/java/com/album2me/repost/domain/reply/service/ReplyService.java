@@ -49,6 +49,16 @@ public class ReplyService {
         reply.update(replyUpdateRequest.toEntity());
     }
 
+    @Transactional
+    public void delete(final Long replyId, final Long userId) {
+        final Reply reply = findReplyById(replyId);
+        final User user = userService.findUserById(userId);
+
+        validateWriter(reply, user);
+
+        replyRepository.delete(reply);
+    }
+
     private void validateWriter(final Reply reply, final User user) {
         if (!reply.isWrittenBy(user)) {
             throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
