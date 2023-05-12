@@ -50,6 +50,16 @@ public class CommentService {
         comment.update(commentUpdateRequest.toEntity());
     }
 
+    @Transactional
+    public void delete(final Long commentId, final Long userId) {
+        final Comment comment = findCommentById(commentId);
+        final User user = userService.findUserById(userId);
+
+        validateWriter(comment, user);
+
+        commentRepository.delete(comment);
+    }
+
     private void validateWriter(final Comment comment, final User user) {
         if (!comment.isWrittenBy(user)) {
             throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
