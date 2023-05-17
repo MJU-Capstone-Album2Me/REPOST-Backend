@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class JwtProperties {
-    private String issuer;
-    private String clientSecret;
-    private int expirySeconds;
+    private final String issuer;
+    private final String clientSecret;
+    private final int expirySeconds;
 
     public JwtProperties(
             @Value("${jwt.token.issuer}") String issuer,
