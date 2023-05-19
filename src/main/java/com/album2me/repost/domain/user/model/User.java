@@ -1,7 +1,10 @@
 package com.album2me.repost.domain.user.model;
 
+import com.album2me.repost.domain.member.Member;
 import com.album2me.repost.global.common.BaseTimeColumn;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +26,9 @@ public class User extends BaseTimeColumn {
 
     @Column(length = 20, unique = true, nullable = false)
     private String nickName;
+
+    @OneToMany(mappedBy = "user")
+    List<Member> members = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
