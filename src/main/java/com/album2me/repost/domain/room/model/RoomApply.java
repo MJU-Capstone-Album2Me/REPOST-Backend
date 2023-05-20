@@ -9,10 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomApply {
 
     @Id
@@ -24,9 +27,14 @@ public class RoomApply {
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     private LocalDateTime requestedAt;
 
+    public RoomApply(Room room, User requester) {
+        this.room = room;
+        this.requester = requester;
+        this.requestedAt = LocalDateTime.now();
+    }
 }
