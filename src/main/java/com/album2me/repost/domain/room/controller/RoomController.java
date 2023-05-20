@@ -30,12 +30,17 @@ public class RoomController {
         );
     }
 
-    @GetMapping("{roomNumber}/inviteLink")
+    @GetMapping("{roomNumber}/inviteCode")
     public ResponseEntity<RoomInviteCodeResponse> getInviteCode(@PathVariable Long roomNumber) {
         return ResponseEntity.ok(
                 roomService.getInviteCode(roomNumber)
         );
     }
 
+    @PostMapping("{inviteCode}/apply")
+    public ResponseEntity<Void> applyRoom(@PathVariable String inviteCode, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        roomService.applyRoom(inviteCode, jwtAuthentication.getId());
+        return ResponseEntity.ok().build();
+    }
 
 }
