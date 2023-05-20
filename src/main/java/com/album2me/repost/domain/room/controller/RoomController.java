@@ -1,8 +1,9 @@
 package com.album2me.repost.domain.room.controller;
 
-import com.album2me.repost.domain.room.dto.RoomCreateRequest;
-import com.album2me.repost.domain.room.dto.RoomCreateResponse;
-import com.album2me.repost.domain.room.dto.RoomInviteCodeResponse;
+import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
+import com.album2me.repost.domain.room.dto.response.RoomApplyListResponse;
+import com.album2me.repost.domain.room.dto.response.RoomCreateResponse;
+import com.album2me.repost.domain.room.dto.response.RoomInviteCodeResponse;
 import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.global.config.security.jwt.JwtAuthentication;
 import jakarta.validation.Valid;
@@ -30,17 +31,23 @@ public class RoomController {
         );
     }
 
-    @GetMapping("{roomNumber}/inviteCode")
-    public ResponseEntity<RoomInviteCodeResponse> getInviteCode(@PathVariable Long roomNumber) {
+    @GetMapping("{roomId}/inviteCode")
+    public ResponseEntity<RoomInviteCodeResponse> getInviteCode(@PathVariable Long roomId) {
         return ResponseEntity.ok(
-                roomService.getInviteCode(roomNumber)
+                roomService.getInviteCode(roomId)
         );
     }
 
-    @PostMapping("{inviteCode}/apply")
+    @PostMapping("{inviteCode}/application")
     public ResponseEntity<Void> applyRoom(@PathVariable String inviteCode, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
         roomService.applyRoom(inviteCode, jwtAuthentication.getId());
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("{roomId}/application")
+    public ResponseEntity<RoomApplyListResponse> getApplications(@PathVariable Long roomId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        return ResponseEntity.ok(
+                roomService.getApplications(roomId, jwtAuthentication.getId())
+        );
+    }
 }
