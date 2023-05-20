@@ -3,6 +3,7 @@ package com.album2me.repost.domain.room.service;
 import com.album2me.repost.domain.member.Member;
 import com.album2me.repost.domain.room.dto.RoomCreateRequest;
 import com.album2me.repost.domain.room.dto.RoomCreateResponse;
+import com.album2me.repost.domain.room.dto.RoomInviteLinkResponse;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.room.repository.RoomRepository;
 
@@ -34,5 +35,10 @@ public class RoomService {
         newRoom.addMember(host);
         roomRepository.save(newRoom);
         return new RoomCreateResponse(newRoom.getId());
+    }
+
+    public RoomInviteLinkResponse getInviteCode(Long roomId) {
+        Room room = findRoomById(roomId);
+        return new RoomInviteLinkResponse(room.getInviteLink());
     }
 }
