@@ -2,7 +2,7 @@ package com.album2me.repost.domain.room.controller;
 
 import com.album2me.repost.domain.room.dto.RoomCreateRequest;
 import com.album2me.repost.domain.room.dto.RoomCreateResponse;
-import com.album2me.repost.domain.room.dto.RoomInviteLinkResponse;
+import com.album2me.repost.domain.room.dto.RoomInviteCodeResponse;
 import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.global.config.security.jwt.JwtAuthentication;
 import jakarta.validation.Valid;
@@ -31,7 +31,11 @@ public class RoomController {
     }
 
     @GetMapping("{roomNumber}/inviteLink")
-    public RoomInviteLinkResponse getInviteCode(@PathVariable Long roomNumber) {
-        return roomService.getInviteCode(roomNumber);
+    public ResponseEntity<RoomInviteCodeResponse> getInviteCode(@PathVariable Long roomNumber) {
+        return ResponseEntity.ok(
+                roomService.getInviteCode(roomNumber)
+        );
     }
+
+
 }
