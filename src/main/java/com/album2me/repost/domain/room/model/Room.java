@@ -28,21 +28,21 @@ public class Room extends BaseTimeColumn {
     @Column(length = 20, nullable = false)
     private String name;
 
-    private String inviteLink;
+    private String inviteCode;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Member> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<EntranceRequest> entranceRequests = new ArrayList<>();
+    private List<RoomApply> roomApplies = new ArrayList<>();
 
     public Room(String name) {
-        generateInviteLink();
+        generateInviteCode();
         this.name = name;
     }
 
-    public void generateInviteLink() {
-        this.inviteLink = RandomStringUtils.randomAlphabetic(30);;
+    public void generateInviteCode() {
+        this.inviteCode = RandomStringUtils.randomAlphabetic(30);;
     }
 
     public void addMember(Member member) {
