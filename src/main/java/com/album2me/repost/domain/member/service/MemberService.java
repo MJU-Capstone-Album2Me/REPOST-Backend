@@ -1,8 +1,10 @@
 package com.album2me.repost.domain.member.service;
 
+import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.repository.MemberRepository;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.user.model.User;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +19,14 @@ public class MemberService {
         }
     }
 
+    public void checkHost(Room room, User user) {
+        Member member = findMemberByRoomAndUser(room, user);
+        if(!member.isHost()) {
+            throw new IllegalArgumentException("해당 권한이 없습니다.");
+        }
+    }
+    public Member findMemberByRoomAndUser(Room room, User user) {
+        return memberRepository.findByRoomAndUser(room, user)
+                .orElseThrow(() -> new NoSuchElementException("해당 Room에 가입되어있지 않습니다."));
+    }
 }
