@@ -13,7 +13,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class EntranceRequest {
+public class RoomApply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
