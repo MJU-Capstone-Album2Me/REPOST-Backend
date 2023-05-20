@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        API_PREFIX + "/user/sign-up",
+                        API_PREFIX + "/users/sign-up",
                         API_PREFIX + "/auth"
                         //API_PREFIX + "/image"
                 ).permitAll()
