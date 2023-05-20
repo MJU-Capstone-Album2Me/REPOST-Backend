@@ -1,4 +1,4 @@
-package com.album2me.repost.domain.member;
+package com.album2me.repost.domain.member.domain;
 
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.user.model.User;

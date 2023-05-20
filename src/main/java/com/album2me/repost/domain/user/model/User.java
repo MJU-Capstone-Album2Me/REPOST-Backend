@@ -1,6 +1,6 @@
 package com.album2me.repost.domain.user.model;
 
-import com.album2me.repost.domain.member.Member;
+import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.global.common.BaseTimeColumn;
 import jakarta.persistence.*;
 import java.util.ArrayList;
