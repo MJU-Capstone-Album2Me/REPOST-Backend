@@ -1,6 +1,6 @@
 package com.album2me.repost.domain.room.model;
 
-import com.album2me.repost.domain.member.Member;
+import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.global.common.BaseTimeColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -28,6 +28,7 @@ public class Room extends BaseTimeColumn {
     @Column(length = 20, nullable = false)
     private String name;
 
+    @Column(length = 50, nullable = false, unique = true)
     private String inviteCode;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
@@ -47,5 +48,9 @@ public class Room extends BaseTimeColumn {
 
     public void addMember(Member member) {
         members.add(member);
+    }
+
+    public void addApply(RoomApply roomApply) {
+        roomApplies.add(roomApply);
     }
 }
