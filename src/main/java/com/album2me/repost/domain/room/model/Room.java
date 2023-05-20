@@ -33,6 +33,8 @@ public class Room extends BaseTimeColumn {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Member> members = new ArrayList<>();
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<EntranceRequest> entranceRequests = new ArrayList<>();
 
     public Room(String name) {
         generateInviteLink();
