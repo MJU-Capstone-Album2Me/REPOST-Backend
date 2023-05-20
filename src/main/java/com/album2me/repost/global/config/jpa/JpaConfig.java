@@ -1,4 +1,4 @@
-package com.album2me.repost.global.config;
+package com.album2me.repost.global.config.jpa;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

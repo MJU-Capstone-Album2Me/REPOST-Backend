@@ -1,4 +1,4 @@
-package com.album2me.repost.global.config;
+package com.album2me.repost.global.config.jasypt;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.StringEncryptor;
