@@ -2,6 +2,7 @@ package com.album2me.repost.domain.room.service;
 
 import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.service.MemberService;
+import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
 import com.album2me.repost.domain.room.dto.response.RoomApplyListResponse;
 import com.album2me.repost.domain.room.dto.response.RoomApplyResponse;
@@ -54,13 +55,22 @@ public class RoomService {
         room.addApply(new RoomApply(room, requester));
     }
 
-    public RoomApplyListResponse getApplications(Long roomId, Long id) {
+    public RoomApplyListResponse getApplications(Long roomId, Long userId) {
         Room room = findRoomById(roomId);
-        User user = userService.findUserById(id);
+        User user = userService.findUserById(userId);
         memberService.checkHost(room, user);
         List<RoomApplyResponse> roomApplyResponseList = roomApplyRepository.findRoomAppliesWithUserByRoom(room)
                 .stream().map(RoomApplyResponse::from).toList();
         return new RoomApplyListResponse(roomApplyResponseList);
+    }
+
+    @Transactional
+    public void approveApply(RoomApplyApproveRequest roomApplyApproveRequest, Long roomId, Long userId) {
+        Room room = findRoomById(roomId);
+        User user = userService.findUserById(userId);
+        memberService.checkHost(room, user);
+        User requester = findUserInRoomApplyById(roomApplyApproveRequest.applyId());
+        room.addMember(new Member(requester, room, false));
     }
 
     public Room findRoomById(Long roomId) {
@@ -71,6 +81,12 @@ public class RoomService {
     public Room findRoomByInviteCode(String inviteCode) {
         return roomRepository.findByInviteCode(inviteCode)
                 .orElseThrow(() -> new NoSuchElementException("해당 inviteCode로 Room을 찾을 수 없습니다."));
+    }
+
+    public User findUserInRoomApplyById(Long id) {
+        RoomApply roomApply = roomApplyRepository.findRoomApplyWithUserById(id)
+                .orElseThrow(() -> new NoSuchElementException("RoomApply가 존재하지 않습니다."));
+        return roomApply.getRequester();
     }
 
 }

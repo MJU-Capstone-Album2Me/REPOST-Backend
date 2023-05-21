@@ -1,5 +1,6 @@
 package com.album2me.repost.domain.room.controller;
 
+import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
 import com.album2me.repost.domain.room.dto.response.RoomApplyListResponse;
 import com.album2me.repost.domain.room.dto.response.RoomCreateResponse;
@@ -38,7 +39,7 @@ public class RoomController {
         );
     }
 
-    @PostMapping("{inviteCode}/application")
+    @PostMapping("{inviteCode}/apply")
     public ResponseEntity<Void> applyRoom(@PathVariable String inviteCode, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
         roomService.applyRoom(inviteCode, jwtAuthentication.getId());
         return ResponseEntity.ok().build();
@@ -49,5 +50,11 @@ public class RoomController {
         return ResponseEntity.ok(
                 roomService.getApplications(roomId, jwtAuthentication.getId())
         );
+    }
+
+    @PostMapping("{roomId}/application")
+    public void approveApply(@RequestBody RoomApplyApproveRequest roomApplyApproveRequest, @PathVariable Long roomId,
+                             @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        roomService.approveApply(roomApplyApproveRequest,roomId, jwtAuthentication.getId());
     }
 }
