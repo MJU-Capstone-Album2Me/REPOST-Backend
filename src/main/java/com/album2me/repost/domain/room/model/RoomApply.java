@@ -2,6 +2,8 @@ package com.album2me.repost.domain.room.model;
 
 import com.album2me.repost.domain.user.model.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,11 +32,15 @@ public class RoomApply {
     @JoinColumn(name = "requester_id")
     private User requester;
 
+    @Enumerated(EnumType.STRING)
+    private RoomApplyStatus roomApplyStatus;
+
     private LocalDateTime requestedAt;
 
     public RoomApply(Room room, User requester) {
         this.room = room;
         this.requester = requester;
         this.requestedAt = LocalDateTime.now();
+        this.roomApplyStatus = RoomApplyStatus.WAITING;
     }
 }
