@@ -28,7 +28,7 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> jar 파일 실행: $DEPLOY_JAR 파일 실행" >> $DEPLOY_LOG
-nohup java -jar "$DEPLOY_JAR" > $APP_LOG 2> $ERROR_LOG &
+nohup java -jar -Dspring.profiles.active=prod "$DEPLOY_JAR" > $APP_LOG 2> $ERROR_LOG &
 
 CURRENT_PID=$(pgrep -f "$JAR_NAME")
 echo " 실행된 프로세스 아이디 $CURRENT_PID 입니다." >> $DEPLOY_LOG
