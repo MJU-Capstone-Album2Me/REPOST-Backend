@@ -64,6 +64,10 @@ jacocoTestReport {
 	}
 }
 
+jar {
+	enabled = false
+}
+
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
