@@ -28,7 +28,7 @@ public class JwtProvider {
                 .withClaim("authId", user.getAuthId())
                 .withArrayClaim("roles", new String[]{user.getRole().name()})
                 .withIssuedAt(now)
-                .withExpiresAt(new Date(now.getTime() + jwtProperties.getExpirySeconds()))
+                .withExpiresAt(new Date(now.getTime() + jwtProperties.getExpirySeconds() * 1000L))
                 .sign(algorithm);
     }
 
