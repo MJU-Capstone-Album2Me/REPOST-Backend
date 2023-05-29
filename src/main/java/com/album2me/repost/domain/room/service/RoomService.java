@@ -94,7 +94,7 @@ public class RoomService {
     }
 
     public void checkAlreadyApplied(Room room, User requester) {
-        if(!roomApplyRepository.existsByRoomAndRequesterAndRoomApplyStatus(room, requester, RoomApplyStatus.WAITING)){
+        if(roomApplyRepository.existsByRoomAndRequesterAndRoomApplyStatus(room, requester, RoomApplyStatus.WAITING)){
             throw new IllegalArgumentException("이미 지원한 상태입니다.");
         }
     }
