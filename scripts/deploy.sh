@@ -2,8 +2,7 @@
 
 PROJECT_ROOT="/home/ubuntu/repost"
 
-JAR_PATH="$PROJECT_ROOT/build/libs/*.jar"
-BUILD_JAR=$(ls "$JAR_PATH")
+BUILD_JAR=$(ls $PROJECT_ROOT/build/libs/*.jar)
 JAR_NAME=$(basename "$BUILD_JAR")
 
 DEPLOY_PATH="$PROJECT_ROOT/"
