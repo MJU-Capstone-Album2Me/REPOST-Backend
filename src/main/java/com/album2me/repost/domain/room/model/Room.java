@@ -34,7 +34,7 @@ public class Room extends BaseTimeColumn {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Member> members = new ArrayList<>();
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomApply> roomApplies = new ArrayList<>();
 
     public Room(String name) {

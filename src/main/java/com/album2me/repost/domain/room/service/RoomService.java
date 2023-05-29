@@ -10,6 +10,7 @@ import com.album2me.repost.domain.room.dto.response.RoomCreateResponse;
 import com.album2me.repost.domain.room.dto.response.RoomInviteCodeResponse;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.room.model.RoomApply;
+import com.album2me.repost.domain.room.model.RoomApplyStatus;
 import com.album2me.repost.domain.room.repository.RoomApplyRepository;
 import com.album2me.repost.domain.room.repository.RoomRepository;
 
@@ -52,6 +53,7 @@ public class RoomService {
         Room room = findRoomByInviteCode(inviteCode);
         User requester = userService.findUserById(requesterId);
         memberService.checkAlreadyJoined(room, requester);
+        checkAlreadyApplied(room, requester);
         room.addApply(new RoomApply(room, requester));
     }
 
@@ -59,7 +61,7 @@ public class RoomService {
         Room room = findRoomById(roomId);
         User user = userService.findUserById(userId);
         memberService.checkHost(room, user);
-        List<RoomApplyResponse> roomApplyResponseList = roomApplyRepository.findRoomAppliesWithUserByRoom(room)
+        List<RoomApplyResponse> roomApplyResponseList = roomApplyRepository.findRoomAppliesWithUserByRoomAndRoomApplyStatus(room, RoomApplyStatus.WAITING)
                 .stream().map(RoomApplyResponse::from).toList();
         return new RoomApplyListResponse(roomApplyResponseList);
     }
@@ -69,8 +71,11 @@ public class RoomService {
         Room room = findRoomById(roomId);
         User user = userService.findUserById(userId);
         memberService.checkHost(room, user);
-        User requester = findUserInRoomApplyById(roomApplyApproveRequest.applyId());
-        room.addMember(new Member(requester, room, false));
+        RoomApply roomapply = findRoomApplyWithUserById(roomApplyApproveRequest.applyId());
+        roomapply.approve();
+        room.addMember(new Member(roomapply.getRequester(), room, false));
+        roomApplyRepository.save(roomapply);
+        roomRepository.save(room);
     }
 
     public Room findRoomById(Long roomId) {
@@ -83,10 +88,15 @@ public class RoomService {
                 .orElseThrow(() -> new NoSuchElementException("해당 inviteCode로 Room을 찾을 수 없습니다."));
     }
 
-    public User findUserInRoomApplyById(Long id) {
-        RoomApply roomApply = roomApplyRepository.findRoomApplyWithUserById(id)
+    public RoomApply findRoomApplyWithUserById(Long applyId) {
+        return roomApplyRepository.findRoomApplyWithUserById(applyId)
                 .orElseThrow(() -> new NoSuchElementException("RoomApply가 존재하지 않습니다."));
-        return roomApply.getRequester();
+    }
+
+    public void checkAlreadyApplied(Room room, User requester) {
+        if(!roomApplyRepository.existsByRoomAndRequesterAndRoomApplyStatus(room, requester, RoomApplyStatus.WAITING)){
+            throw new IllegalArgumentException("이미 지원한 상태입니다.");
+        }
     }
 
 }
