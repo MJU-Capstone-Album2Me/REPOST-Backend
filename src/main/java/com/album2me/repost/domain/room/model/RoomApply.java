@@ -43,4 +43,12 @@ public class RoomApply {
         this.requestedAt = LocalDateTime.now();
         this.roomApplyStatus = RoomApplyStatus.WAITING;
     }
+
+    public void approve(){
+        this.roomApplyStatus = RoomApplyStatus.ACCEPTED;
+    }
+
+    public void reject(){
+        this.roomApplyStatus = RoomApplyStatus.REJECTED;
+    }
 }
