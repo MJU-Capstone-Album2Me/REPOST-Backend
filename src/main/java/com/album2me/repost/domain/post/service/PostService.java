@@ -1,20 +1,25 @@
 package com.album2me.repost.domain.post.service;
 
-import com.album2me.repost.domain.album.model.Album;
-import com.album2me.repost.domain.album.service.AlbumService;
+import com.album2me.repost.domain.image.dto.UploadImageRequest;
+import com.album2me.repost.domain.image.dto.UploadImageResponse;
+import com.album2me.repost.domain.image.dto.UploadImageUrlRequest;
+import com.album2me.repost.domain.image.service.ImageService;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.dto.response.PostResponse;
 import com.album2me.repost.domain.post.repository.PostRepository;
+import com.album2me.repost.domain.room.model.Room;
+import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.domain.user.model.User;
 
-import com.album2me.repost.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -23,9 +28,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final UserService userService;
-    private final AlbumService albumService;
+    private final RoomService roomService;
     private final PostRepository postRepository;
+    private final ImageService imageService;
 
     public PostResponse findById(final Long id) {
 
@@ -44,20 +49,51 @@ public class PostService {
     }
 
     @Transactional
-    public Long create(final Long albumId, final Long userId, final PostCreateRequest postCreateRequest) {
-        final User user = userService.findUserById(userId);
-        final Album album = albumService.findAlbumById(albumId);
+    public Long create(final Long roomId, final User user, final PostCreateRequest postCreateRequest) {
+        final Room room = roomService.findRoomById(roomId);
 
-        final Long postId = createPost(user, album, postCreateRequest);
+        final Long postId = createPost(room, user, postCreateRequest);
 
         return postId;
     }
 
-    public Long createPost(final User user, final Album album, final PostCreateRequest postCreateRequest) {
-        final Post post = postCreateRequest.toEntity(user, album);
+    public Long createPost(final Room room, final User user, final PostCreateRequest postCreateRequest) {
+        final Post post = postCreateRequest.toEntity(user, room);
+
+        final Long postId = postRepository.save(post).getId();
+
+        uploadImages(postCreateRequest.getImages(), postId);
 
         return postRepository.save(post)
                 .getId();
+    }
+
+    private List<String> uploadImages(final List<MultipartFile> images, final Long postId) {
+        List<String> postImageUrls = new ArrayList<>();
+
+        for (MultipartFile image : images) {
+
+            String postImageUrl = uploadImageToAwsS3(image);
+            postImageUrls.add(postImageUrl);
+
+            uploadImageToDB(postId, postImageUrl);
+        }
+
+        return postImageUrls;
+    }
+
+    private String uploadImageToAwsS3(final MultipartFile image) {
+        UploadImageRequest uploadImageRequest = UploadImageRequest.of(image);
+
+        final UploadImageResponse uploadImageResponse = imageService.uploadImageToS3(uploadImageRequest);
+
+        return uploadImageResponse.imageUrl();
+    }
+
+
+    private void uploadImageToDB(final Long postId, final String postImageUrl) {
+        UploadImageUrlRequest uploadImageUrlRequest = UploadImageUrlRequest.of(postId, postImageUrl);
+        imageService.uploadImageToDB(uploadImageUrlRequest);
     }
 
     @Transactional
@@ -80,7 +116,7 @@ public class PostService {
 
     private void validateWriter(final Post post, final User user) {
         if (!post.isWrittenBy(user)) {
-                throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
+            throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
         }
     }
 

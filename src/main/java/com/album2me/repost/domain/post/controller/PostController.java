@@ -14,10 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/albums/{albumId}/posts")
+@RequestMapping("/api/rooms/{roomId}/posts")
 @RequiredArgsConstructor
 public class PostController {
 
@@ -31,25 +30,26 @@ public class PostController {
         );
     }
 
-    @GetMapping
-    public List<PostResponse> showAll() {
-        return postService.showAll();
-    }
+//    // 커서 정보 담은 Request dto 객체 전송.
+//    @GetMapping
+//    public ResponseEntity<PostPageResponse> showAll() {
+//        return postService.showAll();
+//    }
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @PathVariable final Long albumId,
+            @PathVariable final Long roomId,
             @VerifiedUser final User user,
             @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
-        final Long postId = postService.create(albumId, user.getId(), postCreateRequest);
+        final Long postId = postService.create(roomId, user, postCreateRequest);
 
         return ResponseEntity.created(
-                URI.create("/api/albums/{albumId}/posts" + postId)
+                URI.create("/api/rooms/{roomId}/posts" + postId)
         ).build();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable final Long id,
             @VerifiedUser final User user,
