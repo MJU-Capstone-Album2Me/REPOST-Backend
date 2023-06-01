@@ -2,7 +2,9 @@ package com.album2me.repost.domain.post.controller;
 
 import com.album2me.repost.domain.auth.controller.VerifiedUser;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
+import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
+import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostResponse;
 import com.album2me.repost.domain.post.service.PostService;
 
@@ -10,6 +12,9 @@ import com.album2me.repost.domain.user.model.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,18 +28,23 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> show(@PathVariable final Long id) {
+    public ResponseEntity<PostResponse> showPageByPostId(@PathVariable final Long id) {
 
         return ResponseEntity.ok(
                 postService.findById(id)
         );
     }
 
-//    // 커서 정보 담은 Request dto 객체 전송.
-//    @GetMapping
-//    public ResponseEntity<PostPageResponse> showAll() {
-//        return postService.showAll();
-//    }
+    @GetMapping
+    public ResponseEntity<PostPageResponse> showPage(
+            @Valid @RequestBody final PostShowRequest postShowRequest,
+            @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC) final Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                postService.findAll(postShowRequest, pageable)
+        );
+    }
+
 
     @PostMapping
     public ResponseEntity<Void> create(
