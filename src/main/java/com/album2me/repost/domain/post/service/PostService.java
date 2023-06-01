@@ -5,7 +5,9 @@ import com.album2me.repost.domain.image.dto.UploadImageResponse;
 import com.album2me.repost.domain.image.dto.UploadImageUrlRequest;
 import com.album2me.repost.domain.image.service.ImageService;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
+import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
+import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.dto.response.PostResponse;
 import com.album2me.repost.domain.post.repository.PostRepository;
@@ -15,6 +17,8 @@ import com.album2me.repost.domain.user.model.User;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,14 +43,11 @@ public class PostService {
         return PostResponse.from(post);
     }
 
-    public List<PostResponse> showAll() {
-        final List<Post> posts = postRepository.findAll();
+    public PostPageResponse findAll(final PostShowRequest postShowRequest, final Pageable pageable) {
+        final Slice<Post> posts = postRepository.findAllPostWithImage(postShowRequest.cursor(), pageable);
 
-        return posts.stream()
-                .map(PostResponse::from)
-                .collect(Collectors.toList());
+        return PostPageResponse.from(posts);
     }
-
     @Transactional
     public Long create(final Long roomId, final User user, final PostCreateRequest postCreateRequest) {
         final Room room = roomService.findRoomById(roomId);
@@ -123,6 +123,5 @@ public class PostService {
     public Post findPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("해당 id로 Post을 찾을 수 없습니다."));
-
     }
 }
