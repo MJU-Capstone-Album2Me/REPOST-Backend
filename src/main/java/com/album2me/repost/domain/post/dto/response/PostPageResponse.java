@@ -10,9 +10,9 @@ public record PostPageResponse(
         List<PostResponse> items
 ) {
     public static PostPageResponse from(final Slice<Post> page) {
-        final List<PostResponse> items = page.getContent().stream()
+        return new PostPageResponse((page.stream()
                 .map(PostResponse::from)
-                .collect(Collectors.toList());
-        return new PostPageResponse(items);
+                .collect(Collectors.toList()))
+        );
     }
 }

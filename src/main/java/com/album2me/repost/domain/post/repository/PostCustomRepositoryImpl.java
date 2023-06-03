@@ -24,7 +24,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         final QPost post = QPost.post;
 
         List<Post> results = jpaQueryFactory.selectFrom(post)
-                .join(post.images)
                 .fetchJoin()
                 .where(eqCursorId(cursorId))
                 .limit(pageable.getPageSize())

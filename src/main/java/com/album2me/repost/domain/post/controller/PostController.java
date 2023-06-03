@@ -5,7 +5,7 @@ import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.dto.response.PostPageResponse;
-import com.album2me.repost.domain.post.dto.response.PostResponse;
+import com.album2me.repost.domain.post.dto.response.PostWithCommentsResponse;
 import com.album2me.repost.domain.post.service.PostService;
 
 import com.album2me.repost.domain.user.model.User;
@@ -28,7 +28,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> showPageByPostId(@PathVariable final Long id) {
+    public ResponseEntity<PostWithCommentsResponse> showPageByPostId(@PathVariable final Long id) {
 
         return ResponseEntity.ok(
                 postService.findById(id)
