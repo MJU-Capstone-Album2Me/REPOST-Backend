@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/rooms")
 public class RoomController {
+    private final static String APPLY_REQUEST_KEY = "inviteCode";
     private final RoomService roomService;
 
     @PostMapping
@@ -44,8 +47,9 @@ public class RoomController {
         );
     }
 
-    @PostMapping("{inviteCode}/apply")
-    public ResponseEntity<Void> applyRoom(@PathVariable String inviteCode, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+    @PostMapping("/apply")
+    public ResponseEntity<Void> applyRoom(@RequestBody Map<String, String> applyRequest, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        String inviteCode = applyRequest.get(APPLY_REQUEST_KEY);
         roomService.applyRoom(inviteCode, jwtAuthentication.getId());
         return ResponseEntity.ok().build();
     }
