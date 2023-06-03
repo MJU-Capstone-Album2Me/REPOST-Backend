@@ -1,5 +1,7 @@
 package com.album2me.repost.domain.post.service;
 
+import com.album2me.repost.domain.comment.dto.response.CommentDto;
+import com.album2me.repost.domain.image.dto.ImageDto;
 import com.album2me.repost.domain.image.dto.UploadImageRequest;
 import com.album2me.repost.domain.image.dto.UploadImageResponse;
 import com.album2me.repost.domain.image.dto.UploadImageUrlRequest;
@@ -9,8 +11,9 @@ import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.model.Post;
-import com.album2me.repost.domain.post.dto.response.PostResponse;
+import com.album2me.repost.domain.post.dto.response.PostWithCommentsResponse;
 import com.album2me.repost.domain.post.repository.PostRepository;
+import com.album2me.repost.domain.reply.dto.response.ReplyDto;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.domain.user.model.User;
@@ -26,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +39,31 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
 
-    public PostResponse findById(final Long id) {
+    public PostWithCommentsResponse findById(final Long id) {
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
 
-        return PostResponse.from(post);
+        List<CommentDto> commentDtos = post.getComments()
+                .stream()
+                .map(comment ->
+                    {
+                        List<ReplyDto> replyDtos = comment.getReplies()
+                                .stream()
+                                .map(ReplyDto::from)
+                                .collect(Collectors.toList());
+
+                        return CommentDto.from(comment, replyDtos);
+                    }
+                )
+                .toList();
+
+        List<ImageDto> imageDtos = post.getImages()
+                .stream()
+                .map(ImageDto::from)
+                .toList();
+
+        return PostWithCommentsResponse.from(post, imageDtos, commentDtos);
     }
 
     public PostPageResponse findAll(final PostShowRequest postShowRequest, final Pageable pageable) {
@@ -48,6 +71,7 @@ public class PostService {
 
         return PostPageResponse.from(posts);
     }
+
     @Transactional
     public Long create(final Long roomId, final User user, final PostCreateRequest postCreateRequest) {
         final Room room = roomService.findRoomById(roomId);
