@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public UserCheckResponse checkIdDuplicated(UserCheckIdRequest userCheckIdRequest) {
-        String authId = userCheckIdRequest.userId();
+        String authId = userCheckIdRequest.authId();
         if(userRepository.existsByAuthId(authId)){
             return new UserCheckResponse(false);
         }
