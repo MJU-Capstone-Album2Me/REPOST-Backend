@@ -4,6 +4,8 @@ import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.repository.MemberRepository;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.user.model.User;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,5 +30,9 @@ public class MemberService {
     public Member findMemberByRoomAndUser(Room room, User user) {
         return memberRepository.findByRoomAndUser(room, user)
                 .orElseThrow(() -> new NoSuchElementException("해당 Room에 가입되어있지 않습니다."));
+    }
+
+    public List<Member> findMembersByUser(User user) {
+        return memberRepository.findMembersWithRoomByUser(user);
     }
 }

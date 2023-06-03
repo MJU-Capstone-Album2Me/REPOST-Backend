@@ -2,9 +2,7 @@ package com.album2me.repost.domain.room.controller;
 
 import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
-import com.album2me.repost.domain.room.dto.response.RoomApplyListResponse;
-import com.album2me.repost.domain.room.dto.response.RoomCreateResponse;
-import com.album2me.repost.domain.room.dto.response.RoomInviteCodeResponse;
+import com.album2me.repost.domain.room.dto.response.*;
 import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.global.config.security.jwt.JwtAuthentication;
 import jakarta.validation.Valid;
@@ -29,6 +27,13 @@ public class RoomController {
                                                          @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
         return ResponseEntity.ok(
                 roomService.createRoom(roomCreateRequest, jwtAuthentication.getId())
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<RoomListResponse> getRooms(@AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        return ResponseEntity.ok(
+                roomService.getRooms(jwtAuthentication.getId())
         );
     }
 
