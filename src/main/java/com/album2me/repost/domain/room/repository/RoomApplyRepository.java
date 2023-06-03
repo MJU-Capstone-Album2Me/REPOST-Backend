@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface RoomApplyRepository extends JpaRepository<RoomApply, Long> {
-    @Query("select a from RoomApply a join fetch User u where a.room = :room and a.roomApplyStatus = :status")
+    @Query("select a from RoomApply a join fetch a.requester where a.room = :room and a.roomApplyStatus = :status")
     List<RoomApply> findRoomAppliesWithUserByRoomAndRoomApplyStatus(Room room, RoomApplyStatus status);
 
-    @Query("select a from RoomApply a join fetch User u where a.id = :id")
+    @Query("select a from RoomApply a join fetch a.requester where a.id = :id")
     Optional<RoomApply> findRoomApplyWithUserById(Long id);
 
     boolean existsByRoomAndRequesterAndRoomApplyStatus(Room room, User user, RoomApplyStatus status);

@@ -4,10 +4,7 @@ import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.service.MemberService;
 import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
-import com.album2me.repost.domain.room.dto.response.RoomApplyListResponse;
-import com.album2me.repost.domain.room.dto.response.RoomApplyResponse;
-import com.album2me.repost.domain.room.dto.response.RoomCreateResponse;
-import com.album2me.repost.domain.room.dto.response.RoomInviteCodeResponse;
+import com.album2me.repost.domain.room.dto.response.*;
 import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.room.model.RoomApply;
 import com.album2me.repost.domain.room.model.RoomApplyStatus;
@@ -27,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RoomService {
-    private final UserService userService;
 
+    private final UserService userService;
     private final RoomRepository roomRepository;
     private final RoomApplyRepository roomApplyRepository;
     private final MemberService memberService;
@@ -41,6 +38,13 @@ public class RoomService {
         newRoom.addMember(host);
         roomRepository.save(newRoom);
         return new RoomCreateResponse(newRoom.getId());
+    }
+
+    public RoomListResponse getRooms(Long userId){
+        User user = userService.findUserById(userId);
+        List<Member> members = memberService.findMembersByUser(user);
+        return new RoomListResponse(members.stream().map(member ->
+                new RoomResponse(member.getRoom().getId(), member.getRoom().getName())).toList());
     }
 
     public RoomInviteCodeResponse getInviteCode(Long roomId) {
