@@ -27,6 +27,9 @@ public class User extends BaseTimeColumn {
     @Column(length = 20, unique = true, nullable = false)
     private String nickName;
 
+    @Column(unique = true)
+    private String profileImageUrl;
+
     @OneToMany(mappedBy = "user")
     List<Member> members = new ArrayList<>();
 
@@ -40,4 +43,9 @@ public class User extends BaseTimeColumn {
         this.nickName = nickName;
     }
 
+    public void updateProfileImage(final String profileImageUrl) {
+        if (profileImageUrl != null) {
+            this.profileImageUrl = profileImageUrl;
+        }
+    }
 }
