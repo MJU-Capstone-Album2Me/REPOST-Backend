@@ -1,6 +1,5 @@
 package com.album2me.repost.domain.user.controller;
 
-import com.album2me.repost.domain.image.dto.UploadImageRequest;
 import com.album2me.repost.domain.user.dto.request.UserCheckIdRequest;
 import com.album2me.repost.domain.user.dto.request.UserCheckNicknameRequest;
 import com.album2me.repost.domain.user.dto.request.UserCreateRequest;
