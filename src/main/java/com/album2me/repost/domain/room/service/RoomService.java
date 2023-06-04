@@ -3,6 +3,7 @@ package com.album2me.repost.domain.room.service;
 import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.dto.MemberResponse;
 import com.album2me.repost.domain.member.service.MemberService;
+import com.album2me.repost.domain.notification.service.NotificationService;
 import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
 import com.album2me.repost.domain.room.dto.response.*;
@@ -30,6 +31,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomApplyRepository roomApplyRepository;
     private final MemberService memberService;
+    private final NotificationService notificationService;
 
     @Transactional
     public RoomCreateResponse createRoom(RoomCreateRequest roomCreateRequest, Long userId) {
@@ -59,8 +61,15 @@ public class RoomService {
         Room room = findRoomByInviteCode(inviteCode);
         User requester = userService.findUserById(requesterId);
         memberService.checkAlreadyJoined(room, requester);
+
+        // 룸 가입 요청
         checkAlreadyApplied(room, requester);
-        room.addApply(new RoomApply(room, requester));
+        RoomApply roomApply = new RoomApply(room, requester);
+        room.addApply(roomApply);
+
+        // 호스트에게 알림 전송
+        Member host = memberService.findHostWithUserByRoom(room);
+        notificationService.createApplyNotification(host.getUser(), requester, roomApply);
     }
 
     public RoomApplyListResponse getApplications(Long roomId, Long userId) {
