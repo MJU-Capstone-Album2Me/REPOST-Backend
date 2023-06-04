@@ -10,8 +10,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification extends BaseTimeColumn {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +27,12 @@ public class Notification extends BaseTimeColumn {
     private String message;
     private String link;
     private boolean isChecked;
+
+    @Builder
+    public Notification(User user, NotificationType notificationType, String message, String link) {
+        this.user = user;
+        this.notificationType = notificationType;
+        this.message = message;
+        this.link = link;
+    }
 }

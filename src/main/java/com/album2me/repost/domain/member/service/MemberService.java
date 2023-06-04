@@ -27,6 +27,10 @@ public class MemberService {
             throw new IllegalArgumentException("해당 권한이 없습니다.");
         }
     }
+
+    public Member findHostWithUserByRoom(Room room) {
+        return memberRepository.findHostWithUserByRoom(room);
+    }
     public Member findMemberByRoomAndUser(Room room, User user) {
         return memberRepository.findByRoomAndUser(room, user)
                 .orElseThrow(() -> new NoSuchElementException("해당 Room에 가입되어있지 않습니다."));
