@@ -1,8 +1,13 @@
 package com.album2me.repost.domain.user.service;
 
+import com.album2me.repost.domain.image.dto.UploadImageRequest;
+import com.album2me.repost.domain.image.dto.UploadImageResponse;
+import com.album2me.repost.domain.image.service.ImageService;
 import com.album2me.repost.domain.user.dto.request.UserCheckIdRequest;
 import com.album2me.repost.domain.user.dto.request.UserCheckNicknameRequest;
+import com.album2me.repost.domain.user.dto.request.UserProfileChangeRequest;
 import com.album2me.repost.domain.user.dto.response.UserCheckResponse;
+import com.album2me.repost.domain.user.dto.response.UserProfileChangeResponse;
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +21,19 @@ import java.util.NoSuchElementException;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final ImageService imageService;
 
     @Transactional
     public void signUp(User user){
         userRepository.save(user);
+    }
+
+    @Transactional
+    public UserProfileChangeResponse changeProfileImage(UserProfileChangeRequest userProfileChangeRequest, Long loginId) {
+        User loginUser = findUserById(loginId);
+        String imageUrl = imageService.uploadImageToS3(userProfileChangeRequest.profileImage());
+        loginUser.updateProfileImage(imageUrl);
+        return new UserProfileChangeResponse(imageUrl);
     }
 
     public User findUserByAuthId(final String authId){
@@ -48,4 +62,5 @@ public class UserService {
         }
         return new UserCheckResponse(true);
     }
+
 }

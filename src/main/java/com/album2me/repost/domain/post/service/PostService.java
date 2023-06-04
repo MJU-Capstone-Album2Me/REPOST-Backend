@@ -111,11 +111,8 @@ public class PostService {
     }
 
     private String uploadImageToAwsS3(final MultipartFile image) {
-        UploadImageRequest uploadImageRequest = UploadImageRequest.of(image);
 
-        final UploadImageResponse uploadImageResponse = imageService.uploadImageToS3(uploadImageRequest);
-
-        return uploadImageResponse.imageUrl();
+        return imageService.uploadImageToS3(image);
     }
 
 

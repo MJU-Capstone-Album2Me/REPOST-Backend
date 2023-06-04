@@ -28,15 +28,15 @@ public class ImageService {
     private final AwsS3Service awsS3Service;
     private final ImageRepository imageRepository;
 
-    public UploadImageResponse uploadImageToS3(final UploadImageRequest uploadImageRequest){
-        AttachedFile attachedFile = getAttachedFile(uploadImageRequest.image());
+    public String uploadImageToS3(final MultipartFile image){
+        AttachedFile attachedFile = getAttachedFile(image);
         String imageUrl;
         try{
             imageUrl = awsS3Service.uploadImage(attachedFile);
         } catch (AmazonS3Exception e) {
             throw new RuntimeException("");
         }
-        return new UploadImageResponse(imageUrl);
+        return imageUrl;
     }
 
     @Transactional

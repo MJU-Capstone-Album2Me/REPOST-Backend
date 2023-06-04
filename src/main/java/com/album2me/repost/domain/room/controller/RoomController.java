@@ -68,7 +68,7 @@ public class RoomController {
     }
 
     @GetMapping("{roomId}/members")
-    public RoomMemberListResponse getMembersInRoom(@PathVariable Long roomId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
-        return roomService.getMembers(roomId, jwtAuthentication.getId());
+    public ResponseEntity<RoomMemberListResponse> getMembersInRoom(@PathVariable Long roomId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        return ResponseEntity.ok(roomService.getMembers(roomId, jwtAuthentication.getId()));
     }
 }
