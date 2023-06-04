@@ -69,8 +69,9 @@ public class PostService {
         return PostWithCommentsResponse.from(post, imageDtos, commentDtos);
     }
 
-    public PostPageResponse findAll(final PostShowRequest postShowRequest, final Pageable pageable) {
-        final Slice<Post> posts = postRepository.findAllPostWithImage(postShowRequest.cursor(), pageable);
+    @Transactional
+    public PostPageResponse findAll(final Long roomId, final PostShowRequest postShowRequest, final Pageable pageable) {
+        final Slice<Post> posts = postRepository.findAllPostWithImage(roomId, postShowRequest.cursor(), pageable);
 
         return PostPageResponse.from(posts);
     }
