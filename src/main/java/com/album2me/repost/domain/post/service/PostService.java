@@ -9,6 +9,7 @@ import com.album2me.repost.domain.image.service.ImageService;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
+import com.album2me.repost.domain.post.dto.response.PostCreateResponse;
 import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.dto.response.PostWithCommentsResponse;
@@ -18,6 +19,7 @@ import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.room.service.RoomService;
 import com.album2me.repost.domain.user.model.User;
 
+import com.album2me.repost.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final RoomService roomService;
+    private final UserService userService;
     private final PostRepository postRepository;
     private final ImageService imageService;
 
@@ -73,12 +76,13 @@ public class PostService {
     }
 
     @Transactional
-    public Long create(final Long roomId, final User user, final PostCreateRequest postCreateRequest) {
+    public PostCreateResponse create(final Long roomId, final Long userId, final PostCreateRequest postCreateRequest) {
         final Room room = roomService.findRoomById(roomId);
+        final User user = userService.findUserById(userId);
 
         final Long postId = createPost(room, user, postCreateRequest);
 
-        return postId;
+        return new PostCreateResponse(postId);
     }
 
     public Long createPost(final Room room, final User user, final PostCreateRequest postCreateRequest) {
@@ -116,12 +120,14 @@ public class PostService {
 
 
     private void uploadImageToDB(final Long postId, final String postImageUrl) {
-        UploadImageUrlRequest uploadImageUrlRequest = UploadImageUrlRequest.of(postId, postImageUrl);
+        final Post post = findPostById(postId);
+        UploadImageUrlRequest uploadImageUrlRequest = UploadImageUrlRequest.of(post, postImageUrl);
         imageService.uploadImageToDB(uploadImageUrlRequest);
     }
 
     @Transactional
-    public void update(final Long id, final User user, final PostUpdateRequest postUpdateRequest) {
+    public void update(final Long id, final Long userId, final PostUpdateRequest postUpdateRequest) {
+        final User user = userService.findUserById(userId);
         final Post post = findPostById(id);
 
         validateWriter(post, user);
@@ -130,7 +136,8 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(final Long id, final User user) {
+    public void delete(final Long id, final Long userId) {
+        final User user = userService.findUserById(userId);
         final Post post = findPostById(id);
 
         validateWriter(post, user);

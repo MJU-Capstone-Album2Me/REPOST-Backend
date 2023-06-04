@@ -4,11 +4,12 @@ import com.album2me.repost.domain.auth.controller.VerifiedUser;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
+import com.album2me.repost.domain.post.dto.response.PostCreateResponse;
 import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostWithCommentsResponse;
 import com.album2me.repost.domain.post.service.PostService;
 
-import com.album2me.repost.domain.user.model.User;
+import com.album2me.repost.global.config.security.jwt.JwtAuthentication;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -45,27 +47,22 @@ public class PostController {
         );
     }
 
-
     @PostMapping
-    public ResponseEntity<Void> create(
+    public ResponseEntity<PostCreateResponse> create(
             @PathVariable final Long roomId,
-            @VerifiedUser final User user,
-            @Valid @RequestBody final PostCreateRequest postCreateRequest
+            @AuthenticationPrincipal JwtAuthentication jwtAuthentication,
+            @Valid @ModelAttribute final PostCreateRequest postCreateRequest
     ) {
-        final Long postId = postService.create(roomId, user, postCreateRequest);
-
-        return ResponseEntity.created(
-                URI.create("/api/rooms/{roomId}/posts" + postId)
-        ).build();
+        return ResponseEntity.ok(postService.create(roomId, jwtAuthentication.getId(), postCreateRequest));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable final Long id,
-            @VerifiedUser final User user,
-            @Valid @RequestBody final PostUpdateRequest postUpdateRequest
+            @AuthenticationPrincipal JwtAuthentication jwtAuthentication,
+            @Valid @ModelAttribute final PostUpdateRequest postUpdateRequest
     ) {
-        postService.update(id, user, postUpdateRequest);
+        postService.update(id, jwtAuthentication.getId(), postUpdateRequest);
 
         return ResponseEntity.ok()
                 .build();
@@ -74,9 +71,9 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable final Long id,
-            @VerifiedUser final User user
+            @AuthenticationPrincipal JwtAuthentication jwtAuthentication
     ) {
-        postService.delete(id, user);
+        postService.delete(id, jwtAuthentication.getId());
 
         return ResponseEntity.ok()
                 .build();

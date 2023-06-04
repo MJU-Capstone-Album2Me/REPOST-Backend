@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageService {
 
     private final AwsS3Service awsS3Service;
-    private final PostService postService;
     private final ImageRepository imageRepository;
 
     public UploadImageResponse uploadImageToS3(final UploadImageRequest uploadImageRequest){
@@ -42,8 +41,7 @@ public class ImageService {
 
     @Transactional
     public void uploadImageToDB(final UploadImageUrlRequest uploadImageUrlRequest) {
-        Post post = postService.findPostById(uploadImageUrlRequest.postId());
-        Image image = uploadImageUrlRequest.toEntity(post, uploadImageUrlRequest.url());
+        Image image = uploadImageUrlRequest.toEntity(uploadImageUrlRequest.post(), uploadImageUrlRequest.url());
 
         imageRepository.save(image);
     }
