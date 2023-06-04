@@ -36,3 +36,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### qfile
+/src/main/generated/com/album2me/repost/domain/
