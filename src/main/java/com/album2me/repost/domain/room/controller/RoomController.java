@@ -64,6 +64,11 @@ public class RoomController {
     @PostMapping("{roomId}/application")
     public void approveApply(@RequestBody RoomApplyApproveRequest roomApplyApproveRequest, @PathVariable Long roomId,
                              @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
-        roomService.approveApply(roomApplyApproveRequest,roomId, jwtAuthentication.getId());
+        roomService.approveApply(roomApplyApproveRequest, roomId, jwtAuthentication.getId());
+    }
+
+    @GetMapping("{roomId}/members")
+    public RoomMemberListResponse getMembersInRoom(@PathVariable Long roomId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        return roomService.getMembers(roomId, jwtAuthentication.getId());
     }
 }

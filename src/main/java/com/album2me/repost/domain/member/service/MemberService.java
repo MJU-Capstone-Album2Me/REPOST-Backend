@@ -32,7 +32,11 @@ public class MemberService {
                 .orElseThrow(() -> new NoSuchElementException("해당 Room에 가입되어있지 않습니다."));
     }
 
-    public List<Member> findMembersByUser(User user) {
+    public List<Member> findMembersWithRoomByUser(User user) {
         return memberRepository.findMembersWithRoomByUser(user);
+    }
+
+    public List<Member> findMembersWithUserByRoom(Room room) {
+        return memberRepository.findMembersWithUserByRoom(room);
     }
 }

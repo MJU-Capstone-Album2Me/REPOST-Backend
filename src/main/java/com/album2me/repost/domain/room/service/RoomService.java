@@ -1,6 +1,7 @@
 package com.album2me.repost.domain.room.service;
 
 import com.album2me.repost.domain.member.domain.Member;
+import com.album2me.repost.domain.member.dto.MemberResponse;
 import com.album2me.repost.domain.member.service.MemberService;
 import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
@@ -42,7 +43,7 @@ public class RoomService {
 
     public RoomListResponse getRooms(Long userId){
         User user = userService.findUserById(userId);
-        List<Member> members = memberService.findMembersByUser(user);
+        List<Member> members = memberService.findMembersWithRoomByUser(user);
         return new RoomListResponse(members.stream().map(member ->
                 new RoomResponse(member.getRoom().getId(), member.getRoom().getName(),
                         member.getRoom().getMembersCount())).toList());
@@ -83,6 +84,13 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    public RoomMemberListResponse getMembers(Long roomId, Long userId) {
+        Room room = findRoomById(roomId);
+        User user = userService.findUserById(userId);
+        List<Member> members = memberService.findMembersWithUserByRoom(room);
+        return new RoomMemberListResponse(members.stream().map(MemberResponse::of).toList());
+    }
+
     public Room findRoomById(Long roomId) {
         return roomRepository.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException("해당 id로 Room을 찾을 수 없습니다."));
@@ -103,5 +111,4 @@ public class RoomService {
             throw new IllegalArgumentException("이미 지원한 상태입니다.");
         }
     }
-
 }
