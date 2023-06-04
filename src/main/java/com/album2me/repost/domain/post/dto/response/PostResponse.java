@@ -1,7 +1,6 @@
 package com.album2me.repost.domain.post.dto.response;
 
 import com.album2me.repost.domain.image.dto.ImageDto;
-import com.album2me.repost.domain.image.model.Image;
 import com.album2me.repost.domain.post.model.Post;
 
 import java.util.List;
