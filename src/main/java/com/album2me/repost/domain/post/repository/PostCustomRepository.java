@@ -5,5 +5,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 public interface PostCustomRepository {
-    Slice<Post> findAllPostWithImage(Long roomId, Long cursorId, Pageable pageable);
+    Slice<Post> findAllPostWithImage(Long cursorId, Pageable pageable);
 }
