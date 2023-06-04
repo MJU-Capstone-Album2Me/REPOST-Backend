@@ -36,12 +36,11 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<PostPageResponse> showPage(
-            @PathVariable final Long roomId,
             @Valid @RequestBody final PostShowRequest postShowRequest,
             @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC, size = 3) final Pageable pageable
     ) {
         return ResponseEntity.ok(
-                postService.findAll(roomId, postShowRequest, pageable)
+                postService.findAll(postShowRequest, pageable)
         );
     }
 
