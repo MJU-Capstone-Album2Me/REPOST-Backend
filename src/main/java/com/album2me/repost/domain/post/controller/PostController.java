@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-
 @RestController
 @RequestMapping("/api/rooms/{roomId}/posts")
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostPageResponse> showPage(
             @Valid @RequestBody final PostShowRequest postShowRequest,
-            @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC) final Pageable pageable
+            @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC, size = 3) final Pageable pageable
     ) {
         return ResponseEntity.ok(
                 postService.findAll(postShowRequest, pageable)
