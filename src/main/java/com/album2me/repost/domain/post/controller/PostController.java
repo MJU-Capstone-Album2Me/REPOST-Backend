@@ -1,6 +1,5 @@
 package com.album2me.repost.domain.post.controller;
 
-import com.album2me.repost.domain.auth.controller.VerifiedUser;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
