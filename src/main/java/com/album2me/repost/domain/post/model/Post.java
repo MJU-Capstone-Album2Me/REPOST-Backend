@@ -1,7 +1,8 @@
 package com.album2me.repost.domain.post.model;
 
-import com.album2me.repost.domain.album.model.Album;
 import com.album2me.repost.domain.comment.domain.Comment;
+import com.album2me.repost.domain.image.model.Image;
+import com.album2me.repost.domain.room.model.Room;
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.global.common.BaseTimeColumn;
 
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
@@ -25,15 +27,19 @@ public class Post extends BaseTimeColumn {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "album_id", nullable = false)
-    private Album album;
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Image> images = new ArrayList<>();
 
     @Column(nullable = false, length = 100)
     private String title;
@@ -51,7 +57,7 @@ public class Post extends BaseTimeColumn {
     @Builder
     public Post (
             final Long id,
-            final Album album,
+            final Room room,
             final User user,
             final String title,
             final String contents,
@@ -59,13 +65,13 @@ public class Post extends BaseTimeColumn {
             final boolean isFavorite
     ) {
         this.id = id;
-        this.album = album;
+        this.room = room;
         this.user = user;
         this.title = title;
         this.contents = contents;
         this.commentCount = commentCount;
         this.isFavorite = isFavorite;
-   }
+    }
 
     public void update(final Post post) {
         updateTitle(post.getTitle());

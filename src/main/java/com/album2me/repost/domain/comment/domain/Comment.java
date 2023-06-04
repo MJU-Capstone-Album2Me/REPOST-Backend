@@ -1,6 +1,7 @@
 package com.album2me.repost.domain.comment.domain;
 
 import com.album2me.repost.domain.post.model.Post;
+import com.album2me.repost.domain.reply.domain.Reply;
 import com.album2me.repost.domain.user.model.User;
 
 import com.album2me.repost.global.common.BaseTimeColumn;
@@ -10,7 +11,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -32,6 +36,10 @@ public class Comment extends BaseTimeColumn {
 
     @Column(nullable = false)
     private String contents;
+
+    @BatchSize(size = 100)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<Reply> replies = new ArrayList<>();
 
     @Builder
     public Comment (

@@ -3,6 +3,7 @@ package com.album2me.repost.infra.s3;
 import com.album2me.repost.global.common.AttachedFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +39,9 @@ public class AwsS3Service {
         sb.append(UNIX_SEPARATOR);
         sb.append(fileName);
         return sb.toString();
+    }
+
+    public void deleteImage(final String fileName) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 }

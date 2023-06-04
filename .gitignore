@@ -5,6 +5,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+*.application.yml
 
 ### STS ###
 .apt_generated
@@ -36,3 +37,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### qfile
+/src/main/generated/com/album2me/repost/domain/
