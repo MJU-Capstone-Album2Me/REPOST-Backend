@@ -2,6 +2,7 @@ package com.album2me.repost.domain.post.repository;
 
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.model.QPost;
+import com.album2me.repost.domain.room.model.QRoom;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -20,12 +21,15 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Post> findAllPostWithImage(final Long cursorId, final Pageable pageable) {
+    public Slice<Post> findAllPostWithImage(final Long roomId, final Long cursorId, final Pageable pageable) {
         final QPost post = QPost.post;
+        final QRoom room = QRoom.room;
 
         List<Post> results = jpaQueryFactory.selectFrom(post)
+                .join(post.room, room)
                 .fetchJoin()
                 .where(eqCursorId(cursorId))
+                .where(room.id.eq(roomId))
                 .limit(pageable.getPageSize())
                 .fetch();
 
