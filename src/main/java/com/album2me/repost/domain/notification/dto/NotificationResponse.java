@@ -6,11 +6,10 @@ public record NotificationResponse(
         Long id,
         String type,
         String message,
-        String pastTime,
-        String link
+        String pastTime
 ) {
     public static NotificationResponse from(Notification notification) {
         return new NotificationResponse(notification.getId(), notification.getNotificationType().name(),
-                notification.getMessage(), notification.getPastTime(), notification.getLink());
+                notification.getMessage(), notification.getPastTime());
     }
 }

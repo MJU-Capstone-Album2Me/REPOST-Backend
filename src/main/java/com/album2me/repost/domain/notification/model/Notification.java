@@ -29,15 +29,20 @@ public class Notification extends BaseTimeColumn {
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
     private String message;
-    private String link;
-    private boolean isChecked;
+    private Long resourceId;
+    private Boolean approved;
 
     @Builder
-    public Notification(User user, NotificationType notificationType, String message, String link) {
+    public Notification(User user, NotificationType notificationType, String message, Long resourceId, Boolean approved) {
         this.user = user;
         this.notificationType = notificationType;
         this.message = message;
-        this.link = link;
+        this.resourceId = resourceId;
+        this.approved = approved;
+    }
+
+    public void changeApproved(){
+        approved = true;
     }
 
     public String getPastTime() {

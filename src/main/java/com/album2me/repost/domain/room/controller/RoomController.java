@@ -55,8 +55,7 @@ public class RoomController {
     }
 
     @PostMapping("/request/{roomApplyId}")
-    public void approveApply(@RequestBody RoomApplyApproveRequest roomApplyApproveRequest, @PathVariable Long roomApplyId,
-                             @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+    public void approveApply(@RequestBody RoomApplyApproveRequest roomApplyApproveRequest, @PathVariable Long roomApplyId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
         roomService.approveApply(roomApplyApproveRequest, roomApplyId, jwtAuthentication.getId());
     }
 

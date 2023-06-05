@@ -40,8 +40,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String uuid = UUID.randomUUID().toString();
 
         String refreshToken = jwtProvider.createRefreshToken(uuid);
+/**
         redisTemplate.opsForValue().set(uuid, refreshToken);
 
+ **/
         JwtAuthenticationToken authenticated = new JwtAuthenticationToken(new JwtAuthentication(user.getId(), user.getAuthId()), null, createAuthorityList(user.getRole().name()));
         authenticated.setDetails(new AuthenticationResponse(accessToken, refreshToken));
         return authenticated;
