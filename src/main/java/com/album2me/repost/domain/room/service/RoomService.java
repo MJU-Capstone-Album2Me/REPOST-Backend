@@ -72,24 +72,18 @@ public class RoomService {
         notificationService.createApplyNotification(host.getUser(), requester, roomApply);
     }
 
-    public RoomApplyListResponse getApplications(Long roomId, Long userId) {
-        Room room = findRoomById(roomId);
-        User user = userService.findUserById(userId);
-        memberService.checkHost(room, user);
-        List<RoomApplyResponse> roomApplyResponseList = roomApplyRepository.findRoomAppliesWithUserByRoomAndRoomApplyStatus(room, RoomApplyStatus.WAITING)
-                .stream().map(RoomApplyResponse::from).toList();
-        return new RoomApplyListResponse(roomApplyResponseList);
-    }
-
     @Transactional
-    public void approveApply(RoomApplyApproveRequest roomApplyApproveRequest, Long roomId, Long userId) {
-        Room room = findRoomById(roomId);
+    public void approveApply(RoomApplyApproveRequest roomApplyApproveRequest, Long roomApplyId, Long userId) {
         User user = userService.findUserById(userId);
+        RoomApply roomApply = findRoomApplyWithUserById(roomApplyId);
+        Room room = roomApply.getRoom();
         memberService.checkHost(room, user);
-        RoomApply roomapply = findRoomApplyWithUserById(roomApplyApproveRequest.applyId());
-        roomapply.approve();
-        room.addMember(new Member(roomapply.getRequester(), room, false));
-        roomApplyRepository.save(roomapply);
+        if(roomApplyApproveRequest.approveCheck()){
+            room.addMember(new Member(roomApply.getRequester(), room, false));
+        } else{
+
+        }
+        roomApplyRepository.delete(roomApply);
         roomRepository.save(room);
     }
 
@@ -116,7 +110,7 @@ public class RoomService {
     }
 
     public void checkAlreadyApplied(Room room, User requester) {
-        if(roomApplyRepository.existsByRoomAndRequesterAndRoomApplyStatus(room, requester, RoomApplyStatus.WAITING)){
+        if(roomApplyRepository.existsByRoomAndRequester(room, requester)){
             throw new IllegalArgumentException("이미 지원한 상태입니다.");
         }
     }

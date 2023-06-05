@@ -54,17 +54,10 @@ public class RoomController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("{roomId}/application")
-    public ResponseEntity<RoomApplyListResponse> getApplications(@PathVariable Long roomId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
-        return ResponseEntity.ok(
-                roomService.getApplications(roomId, jwtAuthentication.getId())
-        );
-    }
-
-    @PostMapping("{roomId}/application")
-    public void approveApply(@RequestBody RoomApplyApproveRequest roomApplyApproveRequest, @PathVariable Long roomId,
+    @PostMapping("/request/{roomApplyId}")
+    public void approveApply(@RequestBody RoomApplyApproveRequest roomApplyApproveRequest, @PathVariable Long roomApplyId,
                              @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
-        roomService.approveApply(roomApplyApproveRequest, roomId, jwtAuthentication.getId());
+        roomService.approveApply(roomApplyApproveRequest, roomApplyId, jwtAuthentication.getId());
     }
 
     @GetMapping("{roomId}/members")

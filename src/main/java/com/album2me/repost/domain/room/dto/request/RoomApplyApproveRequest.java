@@ -1,6 +1,9 @@
 package com.album2me.repost.domain.room.dto.request;
 
+import jakarta.validation.constraints.NotNull;
+
 public record RoomApplyApproveRequest(
-        Long applyId
+        @NotNull(message = "승인 확인은 null일 수 없습니다.")
+        Boolean approveCheck
 ) {
 }
