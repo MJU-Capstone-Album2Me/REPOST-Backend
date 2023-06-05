@@ -48,7 +48,7 @@ public class RoomService {
         List<Member> members = memberService.findMembersWithRoomByUser(user);
         return new RoomListResponse(members.stream().map(member ->
                 new RoomResponse(member.getRoom().getId(), member.getRoom().getName(),
-                        member.getRoom().getMembersCount())).toList());
+                        member.getRoom().getMembersCount(), member.isHost())).toList());
     }
 
     public RoomInviteCodeResponse getInviteCode(Long roomId) {
