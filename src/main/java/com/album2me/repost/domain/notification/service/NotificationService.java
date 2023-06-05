@@ -30,11 +30,12 @@ public class NotificationService {
         String message = requester.getNickName() + "님께서 가입 요청을 보냈습니다.";
         String link = null;
         Notification notification = Notification.builder()
-                .notificationType(NotificationType.APPLY)
+                .notificationType(NotificationType.APPLY_CHECK)
                 .message(message)
                 .user(user)
                 .link(link)
                 .build();
         notificationRepository.save(notification);
     }
+
 }

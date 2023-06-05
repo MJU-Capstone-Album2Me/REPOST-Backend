@@ -32,23 +32,12 @@ public class RoomApply {
     @JoinColumn(name = "requester_id")
     private User requester;
 
-    @Enumerated(EnumType.STRING)
-    private RoomApplyStatus roomApplyStatus;
-
     private LocalDateTime requestedAt;
 
     public RoomApply(Room room, User requester) {
         this.room = room;
         this.requester = requester;
         this.requestedAt = LocalDateTime.now();
-        this.roomApplyStatus = RoomApplyStatus.WAITING;
     }
 
-    public void approve(){
-        this.roomApplyStatus = RoomApplyStatus.ACCEPTED;
-    }
-
-    public void reject(){
-        this.roomApplyStatus = RoomApplyStatus.REJECTED;
-    }
 }
