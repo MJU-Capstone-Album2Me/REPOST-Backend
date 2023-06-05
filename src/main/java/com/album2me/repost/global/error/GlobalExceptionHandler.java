@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.debug("Bad request exception occurred: {}", e.getMessage(), e);
@@ -32,6 +32,13 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleNoSuchElementException(final NoSuchElementException e) {
         log.debug("Not Found exception occurred: {}", e.getMessage(), e);
         return ErrorResponse.notFound(ErrorCode.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
+        log.debug("Bad request exception occurred: {}", e.getMessage(), e);
+        return new ErrorResponse(400, 4000, e.getMessage(), null);
     }
 
     private List<FieldException> createFieldExceptionList(BindingResult bindingResult) {

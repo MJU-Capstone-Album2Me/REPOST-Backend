@@ -6,10 +6,12 @@ public record NotificationResponse(
         Long id,
         String type,
         String message,
-        String pastTime
+        String pastTime,
+        Long resourceId,
+        Boolean approved
 ) {
     public static NotificationResponse from(Notification notification) {
         return new NotificationResponse(notification.getId(), notification.getNotificationType().name(),
-                notification.getMessage(), notification.getPastTime());
+                notification.getMessage(), notification.getPastTime(), notification.getResourceId(), notification.getApproved());
     }
 }
