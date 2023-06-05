@@ -2,9 +2,12 @@ package com.album2me.repost.global.config.security.jwt;
 
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
+import com.album2me.repost.domain.auth.dto.response.AuthenticationResponse;
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.domain.user.service.UserService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +20,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final UserService userService;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public boolean supports(Class<?> authentication) {
@@ -31,9 +35,15 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private Authentication processUserAuthentication(String principal, String credential) {
         User user = userService.findUserByAuthId(principal);
         checkValidPassword(user, credential);
-        String token = jwtProvider.createAccessToken(user);
+
+        String accessToken = jwtProvider.createAccessToken(user);
+        String uuid = UUID.randomUUID().toString();
+
+        String refreshToken = jwtProvider.createRefreshToken(uuid);
+        redisTemplate.opsForValue().set(uuid, refreshToken);
+
         JwtAuthenticationToken authenticated = new JwtAuthenticationToken(new JwtAuthentication(user.getId(), user.getAuthId()), null, createAuthorityList(user.getRole().name()));
-        authenticated.setDetails(token);
+        authenticated.setDetails(new AuthenticationResponse(accessToken, refreshToken));
         return authenticated;
     }
 
