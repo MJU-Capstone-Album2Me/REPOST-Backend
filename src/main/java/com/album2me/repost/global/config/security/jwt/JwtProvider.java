@@ -20,13 +20,23 @@ public class JwtProvider {
         this.algorithm = Algorithm.HMAC256(jwtProperties.getClientSecret());
     }
 
-    public String createAccessToken(User user){
+    public String createAccessToken(User user) {
         Date now = new Date();
         return JWT.create()
                 .withIssuer(jwtProperties.getIssuer())
                 .withClaim("id", user.getId())
                 .withClaim("authId", user.getAuthId())
                 .withArrayClaim("roles", new String[]{user.getRole().name()})
+                .withIssuedAt(now)
+                .withExpiresAt(new Date(now.getTime() + jwtProperties.getExpirySeconds() * 1000L))
+                .sign(algorithm);
+    }
+
+    public String createRefreshToken(String payload) {
+        Date now = new Date();
+        return JWT.create()
+                .withSubject(payload)
+                .withIssuer(jwtProperties.getIssuer())
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + jwtProperties.getExpirySeconds() * 1000L))
                 .sign(algorithm);
