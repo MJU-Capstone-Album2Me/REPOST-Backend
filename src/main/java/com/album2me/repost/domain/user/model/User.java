@@ -44,8 +44,6 @@ public class User extends BaseTimeColumn {
     }
 
     public void updateProfileImage(final String profileImageUrl) {
-        if (profileImageUrl != null) {
-            this.profileImageUrl = profileImageUrl;
-        }
+        this.profileImageUrl = profileImageUrl;
     }
 }

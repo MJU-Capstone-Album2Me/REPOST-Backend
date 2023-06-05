@@ -69,8 +69,9 @@ public class PostService {
         return PostWithCommentsResponse.from(post, imageDtos, commentDtos);
     }
 
-    public PostPageResponse findAll(final PostShowRequest postShowRequest, final Pageable pageable) {
-        final Slice<Post> posts = postRepository.findAllPostWithImage(postShowRequest.cursor(), pageable);
+    @Transactional
+    public PostPageResponse findAll(final Long roomId, final PostShowRequest postShowRequest, final Pageable pageable) {
+        final Slice<Post> posts = postRepository.findAllPostWithImage(roomId, postShowRequest.cursor(), pageable);
 
         return PostPageResponse.from(posts);
     }
@@ -111,11 +112,8 @@ public class PostService {
     }
 
     private String uploadImageToAwsS3(final MultipartFile image) {
-        UploadImageRequest uploadImageRequest = UploadImageRequest.of(image);
 
-        final UploadImageResponse uploadImageResponse = imageService.uploadImageToS3(uploadImageRequest);
-
-        return uploadImageResponse.imageUrl();
+        return imageService.uploadImageToS3(image);
     }
 
 

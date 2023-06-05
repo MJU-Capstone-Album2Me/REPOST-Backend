@@ -37,6 +37,8 @@ public class Room extends BaseTimeColumn {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomApply> roomApplies = new ArrayList<>();
 
+    private int membersCount;
+
     public Room(String name) {
         generateInviteCode();
         this.name = name;
@@ -48,6 +50,7 @@ public class Room extends BaseTimeColumn {
 
     public void addMember(Member member) {
         members.add(member);
+        membersCount++;
     }
 
     public void addApply(RoomApply roomApply) {
