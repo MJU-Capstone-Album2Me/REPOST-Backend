@@ -3,6 +3,7 @@ package com.album2me.repost.domain.room.service;
 import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.dto.MemberResponse;
 import com.album2me.repost.domain.member.service.MemberService;
+import com.album2me.repost.domain.notification.model.Notification;
 import com.album2me.repost.domain.notification.service.NotificationService;
 import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
@@ -48,7 +49,7 @@ public class RoomService {
         List<Member> members = memberService.findMembersWithRoomByUser(user);
         return new RoomListResponse(members.stream().map(member ->
                 new RoomResponse(member.getRoom().getId(), member.getRoom().getName(),
-                        member.getRoom().getMembersCount())).toList());
+                        member.getRoom().getMembersCount(), member.isHost())).toList());
     }
 
     public RoomInviteCodeResponse getInviteCode(Long roomId) {
@@ -78,15 +79,17 @@ public class RoomService {
         RoomApply roomApply = findRoomApplyWithUserById(roomApplyId);
         Room room = roomApply.getRoom();
         memberService.checkHost(room, user);
-        // 요청을 수락 할 경우 멤버 추가 및 알림 보내기
-        if(roomApplyApproveRequest.approveCheck()){
-            room.addMember(new Member(roomApply.getRequester(), room, false));
-            notificationService.createApplyApproveNotification(roomApply.getRequester(), room);
-        }
-        //승인이나 거절된 알림 및 요청 데이터 삭제
-        notificationService.deleteNotification(roomApplyApproveRequest.notificationId());
-        roomApplyRepository.delete(roomApply);
+
+        // roomApply 상태 변경, 멤버 추가
+        roomApply.approve();
+        room.addMember(new Member(roomApply.getRequester(), room, false));
+        roomApplyRepository.save(roomApply);
         roomRepository.save(room);
+
+        // 알림 승인 상태 변경, 사용자 알림 추가
+        Notification notification = notificationService.findNotificationById(roomApplyApproveRequest.notificationId());
+        notification.changeApproved();
+        notificationService.createApplyApproveNotification(roomApply.getRequester(), room);
     }
 
     public RoomMemberListResponse getMembers(Long roomId, Long userId) {
@@ -112,7 +115,7 @@ public class RoomService {
     }
 
     public void checkAlreadyApplied(Room room, User requester) {
-        if(roomApplyRepository.existsByRoomAndRequester(room, requester)){
+        if(roomApplyRepository.existsByRoomAndRequesterAndRoomApplyStatus(room, requester, RoomApplyStatus.WAITING)){
             throw new IllegalArgumentException("이미 지원한 상태입니다.");
         }
     }

@@ -30,12 +30,12 @@ public class NotificationService {
     @Transactional
     public void createApplyNotification(User user, User requester, RoomApply roomApply) {
         String message = requester.getNickName() + "님께서 가입 요청을 보냈습니다.";
-        String link = "rooms/request/" + roomApply.getId();
         Notification notification = Notification.builder()
-                .notificationType(NotificationType.APPLY_CHECK)
+                .notificationType(NotificationType.APPLY)
                 .message(message)
                 .user(user)
-                .link(link)
+                .resourceId(roomApply.getId())
+                .approved(false)
                 .build();
         notificationRepository.save(notification);
     }
@@ -44,19 +44,14 @@ public class NotificationService {
     public void createApplyApproveNotification(User user, Room room) {
         String message = room.getName() + "에 가입이 완료되셨습니다.";
         Notification notification = Notification.builder()
-                .notificationType(NotificationType.APPLY_APPROVE)
+                .notificationType(NotificationType.ENTRANCE)
                 .message(message)
                 .user(user)
-                .link(null)
+                .resourceId(room.getId())
                 .build();
         notificationRepository.save(notification);
     }
 
-    @Transactional
-    public void deleteNotification(Long id){
-        Notification notification = findNotificationById(id);
-        notificationRepository.delete(notification);
-    }
 
     public Notification findNotificationById(Long id) {
         return notificationRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 알림이 존재하지 않습니다."));

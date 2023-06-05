@@ -1,4 +1,4 @@
-package com.album2me.repost.domain.image.dto;
+package com.album2me.repost.domain.image.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;

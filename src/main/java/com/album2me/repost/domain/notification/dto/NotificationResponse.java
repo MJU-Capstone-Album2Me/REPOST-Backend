@@ -7,10 +7,11 @@ public record NotificationResponse(
         String type,
         String message,
         String pastTime,
-        String link
+        Long resourceId,
+        Boolean approved
 ) {
     public static NotificationResponse from(Notification notification) {
         return new NotificationResponse(notification.getId(), notification.getNotificationType().name(),
-                notification.getMessage(), notification.getPastTime(), notification.getLink());
+                notification.getMessage(), notification.getPastTime(), notification.getResourceId(), notification.getApproved());
     }
 }
