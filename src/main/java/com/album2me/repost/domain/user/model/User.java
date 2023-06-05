@@ -1,6 +1,7 @@
 package com.album2me.repost.domain.user.model;
 
 import com.album2me.repost.domain.member.domain.Member;
+import com.album2me.repost.domain.notification.model.Notification;
 import com.album2me.repost.global.common.BaseTimeColumn;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -30,8 +31,11 @@ public class User extends BaseTimeColumn {
     @Column(unique = true)
     private String profileImageUrl;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Member> members = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Notification> notifications = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;

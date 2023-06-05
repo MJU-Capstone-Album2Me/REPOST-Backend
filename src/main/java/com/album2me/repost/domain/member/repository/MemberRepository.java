@@ -19,4 +19,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m join fetch m.user where m.room = :room")
     List<Member> findMembersWithUserByRoom(Room room);
+
+    @Query("select m from Member m join fetch m.user where m.room = :room and m.isHost=true")
+    Member findHostWithUserByRoom(Room room);
 }

@@ -3,6 +3,7 @@ package com.album2me.repost.domain.room.service;
 import com.album2me.repost.domain.member.domain.Member;
 import com.album2me.repost.domain.member.dto.MemberResponse;
 import com.album2me.repost.domain.member.service.MemberService;
+import com.album2me.repost.domain.notification.service.NotificationService;
 import com.album2me.repost.domain.room.dto.request.RoomApplyApproveRequest;
 import com.album2me.repost.domain.room.dto.request.RoomCreateRequest;
 import com.album2me.repost.domain.room.dto.response.*;
@@ -30,6 +31,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomApplyRepository roomApplyRepository;
     private final MemberService memberService;
+    private final NotificationService notificationService;
 
     @Transactional
     public RoomCreateResponse createRoom(RoomCreateRequest roomCreateRequest, Long userId) {
@@ -59,28 +61,31 @@ public class RoomService {
         Room room = findRoomByInviteCode(inviteCode);
         User requester = userService.findUserById(requesterId);
         memberService.checkAlreadyJoined(room, requester);
-        checkAlreadyApplied(room, requester);
-        room.addApply(new RoomApply(room, requester));
-    }
 
-    public RoomApplyListResponse getApplications(Long roomId, Long userId) {
-        Room room = findRoomById(roomId);
-        User user = userService.findUserById(userId);
-        memberService.checkHost(room, user);
-        List<RoomApplyResponse> roomApplyResponseList = roomApplyRepository.findRoomAppliesWithUserByRoomAndRoomApplyStatus(room, RoomApplyStatus.WAITING)
-                .stream().map(RoomApplyResponse::from).toList();
-        return new RoomApplyListResponse(roomApplyResponseList);
+        // 룸 가입 요청
+        checkAlreadyApplied(room, requester);
+        RoomApply roomApply = new RoomApply(room, requester);
+        room.addApply(roomApply);
+
+        // 호스트에게 알림 전송
+        Member host = memberService.findHostWithUserByRoom(room);
+        notificationService.createApplyNotification(host.getUser(), requester, roomApply);
     }
 
     @Transactional
-    public void approveApply(RoomApplyApproveRequest roomApplyApproveRequest, Long roomId, Long userId) {
-        Room room = findRoomById(roomId);
+    public void approveApply(RoomApplyApproveRequest roomApplyApproveRequest, Long roomApplyId, Long userId) {
         User user = userService.findUserById(userId);
+        RoomApply roomApply = findRoomApplyWithUserById(roomApplyId);
+        Room room = roomApply.getRoom();
         memberService.checkHost(room, user);
-        RoomApply roomapply = findRoomApplyWithUserById(roomApplyApproveRequest.applyId());
-        roomapply.approve();
-        room.addMember(new Member(roomapply.getRequester(), room, false));
-        roomApplyRepository.save(roomapply);
+        // 요청을 수락 할 경우 멤버 추가 및 알림 보내기
+        if(roomApplyApproveRequest.approveCheck()){
+            room.addMember(new Member(roomApply.getRequester(), room, false));
+            notificationService.createApplyApproveNotification(roomApply.getRequester(), room);
+        }
+        //승인이나 거절된 알림 및 요청 데이터 삭제
+        notificationService.deleteNotification(roomApplyApproveRequest.notificationId());
+        roomApplyRepository.delete(roomApply);
         roomRepository.save(room);
     }
 
@@ -107,7 +112,7 @@ public class RoomService {
     }
 
     public void checkAlreadyApplied(Room room, User requester) {
-        if(roomApplyRepository.existsByRoomAndRequesterAndRoomApplyStatus(room, requester, RoomApplyStatus.WAITING)){
+        if(roomApplyRepository.existsByRoomAndRequester(room, requester)){
             throw new IllegalArgumentException("이미 지원한 상태입니다.");
         }
     }
