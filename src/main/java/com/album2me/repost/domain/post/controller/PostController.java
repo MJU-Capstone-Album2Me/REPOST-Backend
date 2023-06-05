@@ -1,8 +1,10 @@
 package com.album2me.repost.domain.post.controller;
 
+import com.album2me.repost.domain.post.dto.request.GalleryShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
+import com.album2me.repost.domain.post.dto.response.GalleryPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostCreateResponse;
 import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostWithCommentsResponse;
@@ -42,6 +44,18 @@ public class PostController {
     ) {
         return ResponseEntity.ok(
                 postService.findAll(roomId, postShowRequest, pageable)
+        );
+    }
+
+    @GetMapping("/images")
+    public ResponseEntity<GalleryPageResponse> showGallery (
+            @PathVariable final Long roomId,
+            @Valid @RequestBody final GalleryShowRequest galleryShowRequest,
+            @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC, size = 3) final Pageable pageable
+            )
+    {
+        return ResponseEntity.ok(
+                postService.findFirstImageForPosts(roomId, galleryShowRequest, pageable)
         );
     }
 

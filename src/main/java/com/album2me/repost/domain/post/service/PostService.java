@@ -2,13 +2,13 @@ package com.album2me.repost.domain.post.service;
 
 import com.album2me.repost.domain.comment.dto.response.CommentDto;
 import com.album2me.repost.domain.image.dto.ImageDto;
-import com.album2me.repost.domain.image.dto.UploadImageRequest;
-import com.album2me.repost.domain.image.dto.UploadImageResponse;
-import com.album2me.repost.domain.image.dto.UploadImageUrlRequest;
+import com.album2me.repost.domain.image.dto.request.UploadImageUrlRequest;
 import com.album2me.repost.domain.image.service.ImageService;
+import com.album2me.repost.domain.post.dto.request.GalleryShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
 import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
+import com.album2me.repost.domain.post.dto.response.GalleryPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostCreateResponse;
 import com.album2me.repost.domain.post.dto.response.PostPageResponse;
 import com.album2me.repost.domain.post.model.Post;
@@ -76,6 +76,12 @@ public class PostService {
         return PostPageResponse.from(posts);
     }
 
+    public GalleryPageResponse findFirstImageForPosts(final Long roomId, final GalleryShowRequest galleryShowRequest, final Pageable pageable) {
+        Slice<Post> posts = postRepository.findFirstImageUrlsForPosts(roomId, galleryShowRequest.cursor(), pageable);
+
+        return GalleryPageResponse.from(posts);
+    }
+
     @Transactional
     public PostCreateResponse create(final Long roomId, final Long userId, final PostCreateRequest postCreateRequest) {
         final Room room = roomService.findRoomById(roomId);
@@ -111,7 +117,7 @@ public class PostService {
         return postImageUrls;
     }
 
-    private String uploadImageToAwsS3(final MultipartFile image) {
+    private String uploadImageToAwsS3 (final MultipartFile image) {
 
         return imageService.uploadImageToS3(image);
     }

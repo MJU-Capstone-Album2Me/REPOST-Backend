@@ -1,5 +1,6 @@
 package com.album2me.repost.domain.post.repository;
 
+import com.album2me.repost.domain.image.model.QImage;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.model.QPost;
 import com.album2me.repost.domain.room.model.QRoom;
@@ -30,6 +31,25 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .fetchJoin()
                 .where(eqCursorId(cursorId))
                 .where(room.id.eq(roomId))
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new SliceImpl<>(results);
+    }
+
+    @Override
+    public Slice<Post> findFirstImageUrlsForPosts(final Long roomId, final Long cursorId, Pageable pageable) {
+        final QPost post = QPost.post;
+        final QRoom room = QRoom.room;
+        final QImage image = QImage.image;
+
+        List<Post> results = jpaQueryFactory.selectFrom(post)
+                .join(post.room, room)
+                .fetchJoin()
+                .join(post.images, image)
+                .fetchJoin()
+                .where(room.id.eq(roomId))
+                .where(eqCursorId(cursorId))
                 .limit(pageable.getPageSize())
                 .fetch();
 

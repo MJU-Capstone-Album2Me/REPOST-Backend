@@ -6,4 +6,6 @@ import org.springframework.data.domain.Slice;
 
 public interface PostCustomRepository {
     Slice<Post> findAllPostWithImage(Long roomId, Long cursorId, Pageable pageable);
+
+    Slice<Post> findFirstImageUrlsForPosts(Long roomId, Long cursorId, Pageable pageable);
 }

@@ -1,7 +1,5 @@
 package com.album2me.repost.domain.user.service;
 
-import com.album2me.repost.domain.image.dto.UploadImageRequest;
-import com.album2me.repost.domain.image.dto.UploadImageResponse;
 import com.album2me.repost.domain.image.service.ImageService;
 import com.album2me.repost.domain.user.dto.request.UserCheckIdRequest;
 import com.album2me.repost.domain.user.dto.request.UserCheckNicknameRequest;

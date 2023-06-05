@@ -1,4 +1,4 @@
-package com.album2me.repost.domain.image.dto;
+package com.album2me.repost.domain.image.dto.response;
 
 
 public record UploadImageResponse(

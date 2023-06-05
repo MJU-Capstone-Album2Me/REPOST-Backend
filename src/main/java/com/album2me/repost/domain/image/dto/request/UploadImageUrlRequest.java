@@ -1,4 +1,4 @@
-package com.album2me.repost.domain.image.dto;
+package com.album2me.repost.domain.image.dto.request;
 
 import com.album2me.repost.domain.image.model.Image;
 import com.album2me.repost.domain.post.model.Post;
