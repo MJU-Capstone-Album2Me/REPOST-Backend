@@ -78,11 +78,13 @@ public class RoomService {
         RoomApply roomApply = findRoomApplyWithUserById(roomApplyId);
         Room room = roomApply.getRoom();
         memberService.checkHost(room, user);
+        // 요청을 수락 할 경우 멤버 추가 및 알림 보내기
         if(roomApplyApproveRequest.approveCheck()){
             room.addMember(new Member(roomApply.getRequester(), room, false));
-        } else{
-
+            notificationService.createApplyApproveNotification(roomApply.getRequester(), room);
         }
+        //승인이나 거절된 알림 및 요청 데이터 삭제
+        notificationService.deleteNotification(roomApplyApproveRequest.notificationId());
         roomApplyRepository.delete(roomApply);
         roomRepository.save(room);
     }
