@@ -4,6 +4,7 @@ import com.album2me.repost.domain.comment.domain.Comment;
 import com.album2me.repost.domain.comment.dto.request.CommentCreateRequest;
 import com.album2me.repost.domain.comment.dto.request.CommentUpdateRequest;
 import com.album2me.repost.domain.comment.repository.CommentRepository;
+import com.album2me.repost.domain.notification.service.NotificationService;
 import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.post.service.PostService;
 import com.album2me.repost.domain.user.model.User;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class CommentService {
     private final UserService userService;
     private final PostService postService;
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public Long create(final Long postId, final Long userId, final CommentCreateRequest commentCreateRequest) {
@@ -30,7 +33,14 @@ public class CommentService {
 
         final Long commentId = createComment(user, post, commentCreateRequest);
 
+        if (!isWriter(post.getUser(), user)){
+            notificationService.createCommentNotification(user, post.getUser(), postId);
+        }
         return commentId;
+    }
+
+    private boolean isWriter(final User parentWriter, final User writer) {
+        return Objects.equals(parentWriter.getId(), writer.getId());
     }
 
     private Long createComment(final User user, final Post post, final CommentCreateRequest commentCreateRequest) {

@@ -27,13 +27,13 @@ public class Notification extends BaseTimeColumn {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @Enumerated(EnumType.STRING)
-    private NotificationType notificationType;
+    private NotificationCommand notificationType;
     private String message;
     private Long resourceId;
     private Boolean approved;
 
     @Builder
-    public Notification(User user, NotificationType notificationType, String message, Long resourceId, Boolean approved) {
+    public Notification(User user, NotificationCommand notificationType, String message, Long resourceId, Boolean approved) {
         this.user = user;
         this.notificationType = notificationType;
         this.message = message;
