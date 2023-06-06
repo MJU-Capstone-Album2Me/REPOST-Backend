@@ -2,6 +2,8 @@ package com.album2me.repost.domain.reply.service;
 
 import com.album2me.repost.domain.comment.domain.Comment;
 import com.album2me.repost.domain.comment.service.CommentService;
+import com.album2me.repost.domain.notification.service.NotificationService;
+import com.album2me.repost.domain.post.model.Post;
 import com.album2me.repost.domain.reply.domain.Reply;
 import com.album2me.repost.domain.reply.dto.request.ReplyCreateRequest;
 import com.album2me.repost.domain.reply.dto.request.ReplyUpdateRequest;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +24,29 @@ public class ReplyService {
     private final UserService userService;
     private final CommentService commentService;
     private final ReplyRepository replyRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public Long create(final Long commentId, final Long userId, final ReplyCreateRequest replyCreateRequest) {
         final User user = userService.findUserById(userId);
         final Comment comment = commentService.findCommentById(commentId);
+        final Post post = comment.getPost();
 
         final Long replyId = createReply(comment, user, replyCreateRequest);
 
+        if (!checkWriter(user, post.getUser())) {
+            notificationService.createReplyNotificationToPostWriter(user, post.getUser(), post.getId());
+        }
+
+        if (!checkWriter(user, comment.getUser())) {
+            notificationService.createReplyNotificationToCommentWriter(user, comment.getUser(), post.getId());
+        }
+
         return replyId;
+    }
+
+    private boolean checkWriter(final User writer, final User parentWriter) {
+        return Objects.equals(parentWriter.getId(), writer.getId());
     }
 
     private Long createReply(final Comment comment, final User user, final ReplyCreateRequest replyCreateRequest) {

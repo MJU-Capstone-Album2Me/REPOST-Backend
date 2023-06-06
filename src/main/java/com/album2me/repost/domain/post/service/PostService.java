@@ -4,9 +4,7 @@ import com.album2me.repost.domain.comment.dto.response.CommentDto;
 import com.album2me.repost.domain.image.dto.ImageDto;
 import com.album2me.repost.domain.image.dto.request.UploadImageUrlRequest;
 import com.album2me.repost.domain.image.service.ImageService;
-import com.album2me.repost.domain.post.dto.request.GalleryShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
-import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.dto.response.GalleryPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostCreateResponse;
@@ -70,14 +68,14 @@ public class PostService {
     }
 
     @Transactional
-    public PostPageResponse findAll(final Long roomId, final PostShowRequest postShowRequest, final Pageable pageable) {
-        final Slice<Post> posts = postRepository.findAllPostWithImage(roomId, postShowRequest.cursor(), pageable);
+    public PostPageResponse findAll(final Long roomId, final Long cursor, final Pageable pageable) {
+        final Slice<Post> posts = postRepository.findAllPostWithImage(roomId, cursor, pageable);
 
         return PostPageResponse.from(posts);
     }
 
-    public GalleryPageResponse findFirstImageForPosts(final Long roomId, final GalleryShowRequest galleryShowRequest, final Pageable pageable) {
-        Slice<Post> posts = postRepository.findFirstImageUrlsForPosts(roomId, galleryShowRequest.cursor(), pageable);
+    public GalleryPageResponse findFirstImageForPosts(final Long roomId, final Long cursor, final Pageable pageable) {
+        Slice<Post> posts = postRepository.findFirstImageUrlsForPosts(roomId, cursor, pageable);
 
         return GalleryPageResponse.from(posts);
     }
