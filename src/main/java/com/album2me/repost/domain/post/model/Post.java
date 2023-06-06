@@ -48,6 +48,7 @@ public class Post extends BaseTimeColumn {
     private String contents;
 
     @Column(length = 10)
+    @ColumnDefault("0")
     private Long commentCount;
 
     @Column(length = 1)
