@@ -1,8 +1,6 @@
 package com.album2me.repost.domain.post.controller;
 
-import com.album2me.repost.domain.post.dto.request.GalleryShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostCreateRequest;
-import com.album2me.repost.domain.post.dto.request.PostShowRequest;
 import com.album2me.repost.domain.post.dto.request.PostUpdateRequest;
 import com.album2me.repost.domain.post.dto.response.GalleryPageResponse;
 import com.album2me.repost.domain.post.dto.response.PostCreateResponse;
@@ -39,23 +37,23 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostPageResponse> showPage(
             @PathVariable final Long roomId,
-            @Valid @RequestBody final PostShowRequest postShowRequest,
+            @RequestParam("cursor") final Long cursor,
             @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC, size = 3) final Pageable pageable
     ) {
         return ResponseEntity.ok(
-                postService.findAll(roomId, postShowRequest, pageable)
+                postService.findAll(roomId, cursor, pageable)
         );
     }
 
     @GetMapping("/images")
     public ResponseEntity<GalleryPageResponse> showGallery (
             @PathVariable final Long roomId,
-            @Valid @RequestBody final GalleryShowRequest galleryShowRequest,
-            @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC, size = 3) final Pageable pageable
+            @RequestParam("cursor") final Long cursor,
+            @PageableDefault(sort = "updated_at", direction = Sort.Direction.DESC, size = 18) final Pageable pageable
             )
     {
         return ResponseEntity.ok(
-                postService.findFirstImageForPosts(roomId, galleryShowRequest, pageable)
+                postService.findFirstImageForPosts(roomId, cursor, pageable)
         );
     }
 
