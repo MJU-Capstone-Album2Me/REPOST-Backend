@@ -14,7 +14,7 @@ public record PostCreateRequest (
 
         String contents,
 
-        @NotNull(message = "사진이 없습니다.") List<MultipartFile> images
+        @NotNull(message = "사진이 없습니다.") List<String> imageUrls
 ) {
 
     public Post toEntity(final User user, final Room room) {
@@ -24,9 +24,5 @@ public record PostCreateRequest (
                 .title(title)
                 .contents(contents)
                 .build();
-    }
-
-    public List<MultipartFile> getImages() {
-        return this.images;
     }
 }

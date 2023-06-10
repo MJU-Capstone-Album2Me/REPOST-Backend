@@ -95,36 +95,20 @@ public class PostService {
 
         final Long postId = postRepository.save(post).getId();
 
-        uploadImages(postCreateRequest.getImages(), postId);
+        uploadImageUrls(postCreateRequest.imageUrls(), postId);
 
         return postRepository.save(post)
                 .getId();
     }
 
-    private List<String> uploadImages(final List<MultipartFile> images, final Long postId) {
-        List<String> postImageUrls = new ArrayList<>();
-
-        for (MultipartFile image : images) {
-
-            String postImageUrl = uploadImageToAwsS3(image);
-            postImageUrls.add(postImageUrl);
-
-            uploadImageToDB(postId, postImageUrl);
-        }
-
-        return postImageUrls;
+    private void uploadImageUrls(final List<String> imageUrls, final Long postId) {
+        imageUrls.forEach(imageUrl -> uploadImageUrlToDB(postId, imageUrl));
     }
 
-    private String uploadImageToAwsS3 (final MultipartFile image) {
-
-        return imageService.uploadImageToS3(image);
-    }
-
-
-    private void uploadImageToDB(final Long postId, final String postImageUrl) {
+    private void uploadImageUrlToDB(final Long postId, final String postImageUrl) {
         final Post post = findPostById(postId);
         UploadImageUrlRequest uploadImageUrlRequest = UploadImageUrlRequest.of(post, postImageUrl);
-        imageService.uploadImageToDB(uploadImageUrlRequest);
+        imageService.uploadImageUrlToDB(uploadImageUrlRequest);
     }
 
     @Transactional

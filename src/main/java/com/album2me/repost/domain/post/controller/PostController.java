@@ -61,7 +61,7 @@ public class PostController {
     public ResponseEntity<PostCreateResponse> create(
             @PathVariable final Long roomId,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication,
-            @Valid @ModelAttribute final PostCreateRequest postCreateRequest
+            @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
         return ResponseEntity.ok(postService.create(roomId, jwtAuthentication.getId(), postCreateRequest));
     }
