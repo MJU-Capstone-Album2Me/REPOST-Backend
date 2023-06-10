@@ -35,7 +35,7 @@ public class ImageService {
     }
 
     @Transactional
-    public void uploadImageToDB(final UploadImageUrlRequest uploadImageUrlRequest) {
+    public void uploadImageUrlToDB(final UploadImageUrlRequest uploadImageUrlRequest) {
         Image image = uploadImageUrlRequest.toEntity(uploadImageUrlRequest.post(), uploadImageUrlRequest.url());
 
         imageRepository.save(image);
