@@ -31,6 +31,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .fetchJoin()
                 .where(eqCursorId(cursorId))
                 .where(room.id.eq(roomId))
+                .orderBy(post.createdAt.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
 
