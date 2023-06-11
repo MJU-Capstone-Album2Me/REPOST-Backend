@@ -20,11 +20,12 @@ public record UserCreateRequest(
         String nickname
 ){
 
-        public User toEntity(PasswordEncoder passwordEncoder) {
+        public User toEntity(PasswordEncoder passwordEncoder, String basicProfileUrl) {
                 return User.builder()
                         .authId(authId)
                         .password(passwordEncoder.encode(password))
                         .nickName(nickname)
+                        .profileImageUrl(basicProfileUrl)
                         .build();
         }
 }

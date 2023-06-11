@@ -41,10 +41,11 @@ public class User extends BaseTimeColumn {
     private Role role = Role.ROLE_USER;
 
     @Builder
-    protected User(final String authId, final String password, final String nickName) {
+    protected User(final String authId, final String password, final String nickName, final String profileImageUrl) {
         this.authId = authId;
         this.password = password;
         this.nickName = nickName;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateProfileImage(final String profileImageUrl) {

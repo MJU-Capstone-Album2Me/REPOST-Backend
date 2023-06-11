@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
+    private static final String BASIC_PROFILE_IMAGE_URL = "https://repost-bucket.s3.ap-northeast-2.amazonaws.com/profile/basic_profile.jpeg";
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -28,7 +29,7 @@ public class UserController {
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@RequestBody @Valid UserCreateRequest userCreateRequest){
-        userService.signUp(userCreateRequest.toEntity(passwordEncoder));
+        userService.signUp(userCreateRequest.toEntity(passwordEncoder, BASIC_PROFILE_IMAGE_URL));
     }
 
     @GetMapping("/profile-image")
