@@ -6,6 +6,7 @@ import com.album2me.repost.domain.user.dto.request.UserCheckNicknameRequest;
 import com.album2me.repost.domain.user.dto.request.UserProfileChangeRequest;
 import com.album2me.repost.domain.user.dto.response.UserCheckResponse;
 import com.album2me.repost.domain.user.dto.response.UserProfileChangeResponse;
+import com.album2me.repost.domain.user.dto.response.UserProfileImageResponse;
 import com.album2me.repost.domain.user.model.User;
 import com.album2me.repost.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,11 @@ public class UserService {
         return new UserProfileChangeResponse(imageUrl);
     }
 
+    public UserProfileImageResponse getProfileImage(Long loginId) {
+        User loginUser = findUserById(loginId);
+        return new UserProfileImageResponse(loginUser.getProfileImageUrl());
+    }
+
     public User findUserByAuthId(final String authId){
         return userRepository.findByAuthId(authId)
                 .orElseThrow(() -> new NoSuchElementException(""));
@@ -60,5 +66,4 @@ public class UserService {
         }
         return new UserCheckResponse(true);
     }
-
 }
