@@ -29,7 +29,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         List<Post> results = jpaQueryFactory.selectFrom(post)
                 .join(post.room, room)
                 .fetchJoin()
-                .where(eqCursorId(cursorId))
+                .where(ltCursorId(cursorId))
                 .where(room.id.eq(roomId))
                 .orderBy(post.createdAt.desc())
                 .limit(pageable.getPageSize())
@@ -50,16 +50,16 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .join(post.images, image)
                 .fetchJoin()
                 .where(room.id.eq(roomId))
-                .where(eqCursorId(cursorId))
+                .where(ltCursorId(cursorId))
                 .limit(pageable.getPageSize())
                 .fetch();
 
         return new SliceImpl<>(results);
     }
 
-    private BooleanExpression eqCursorId(final Long cursorId) {
+    private BooleanExpression ltCursorId(final Long cursorId) {
         if (cursorId != null) {
-            return post.id.gt(cursorId);
+            return post.id.lt(cursorId);
         }
 
         return null;
