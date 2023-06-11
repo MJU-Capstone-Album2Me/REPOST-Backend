@@ -28,7 +28,7 @@ public class User extends BaseTimeColumn {
     @Column(length = 20, unique = true, nullable = false)
     private String nickName;
 
-    @Column(unique = true)
+    @Column
     private String profileImageUrl;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
